@@ -90,33 +90,36 @@
       --dot-color: rgba(124, 58, 237, 0.065);
     }
 
-    /* Nền chấm bi to chìm dịu mắt */
-    .polka-dot-bg {
-      background-color: #f8f7f3;
+    /* Nền Apple Tinted Mesh đồng bộ theo màu chủ đạo */
+    .apple-bg {
+      background-color: #f5f5f7;
       background-image:
-        radial-gradient(var(--dot-color) 18px, transparent 19px),
-        radial-gradient(var(--dot-color) 18px, transparent 19px);
-      background-size: 96px 96px;
-      background-position: 0 0, 48px 48px;
+        radial-gradient(at 0% 0%, rgb(var(--theme-100) / 0.75) 0px, transparent 55%),
+        radial-gradient(at 100% 0%, rgb(var(--theme-50) / 0.9) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgb(var(--theme-100) / 0.55) 0px, transparent 60%);
+      background-attachment: fixed;
     }
 
-    .dark .polka-dot-bg {
-      background-color: #0b0f17;
+    .dark .apple-bg {
+      background-color: #090d16;
       background-image:
-        radial-gradient(rgba(255, 255, 255, 0.03) 18px, transparent 19px),
-        radial-gradient(rgba(255, 255, 255, 0.025) 18px, transparent 19px);
-      background-size: 96px 96px;
-      background-position: 0 0, 48px 48px;
+        radial-gradient(at 0% 0%, rgb(var(--theme-800) / 0.35) 0px, transparent 55%),
+        radial-gradient(at 100% 100%, rgb(var(--theme-700) / 0.2) 0px, transparent 55%);
+      background-attachment: fixed;
     }
 
     .glass-panel {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 0 4px 24px -4px rgba(15, 23, 42, 0.04);
     }
 
     .dark .glass-panel {
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.74);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.35);
     }
 
     .drink-card {
@@ -147,12 +150,18 @@
   </style>
 </head>
 
-<body data-theme="cobalt" class="polka-dot-bg text-slate-800 dark:text-slate-100 min-h-screen font-sans antialiased selection:bg-cobalt-600 selection:text-white transition-colors duration-300">
+<body data-theme="cobalt" class="apple-bg text-slate-800 dark:text-slate-100 min-h-screen font-sans antialiased selection:bg-cobalt-600 selection:text-white transition-colors duration-300 relative">
 
-  <div class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+  <!-- Lớp hình nền tùy chỉnh có làm mờ (Apple Wallpaper Blur) -->
+  <div id="custom-bg-layer" class="fixed inset-0 z-0 pointer-events-none hidden overflow-hidden">
+    <div id="custom-bg-image" class="w-full h-full bg-cover bg-center scale-110 transition-all duration-300"></div>
+    <div class="absolute inset-0 bg-white/35 dark:bg-slate-950/55"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
 
     <!-- HEADER & TOP KPI DASHBOARD -->
-    <header class="glass-panel rounded-3xl border-2 border-cobalt-600/20 dark:border-slate-800 p-4 sm:p-6 shadow-sm mb-5">
+    <header class="glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-6 mb-5">
       <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <!-- Brand & Sketches -->
         <div class="flex items-center gap-3.5">
@@ -245,9 +254,9 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3.5 mt-5 pt-5 border-t border-slate-200/80 dark:border-slate-800">
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3.5 mt-5 pt-5 border-t border-slate-200/60 dark:border-slate-800">
         <!-- 1. Tổng Doanh Thu -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-cobalt-600 to-cobalt-800 text-white p-3.5 sm:p-4 shadow-md">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-cobalt-600 to-cobalt-800 text-white p-4 shadow-sm">
           <div class="flex items-center justify-between opacity-90 text-[11px] font-bold uppercase tracking-wider">
             <span>Tổng Doanh Thu</span>
             <i data-lucide="wallet" class="w-4 h-4"></i>
@@ -256,49 +265,48 @@
           <div id="stat-total-cups" class="text-[11px] text-white/80 mt-1">0 đơn • 0 ly đã bán</div>
         </div>
 
-        <!-- 2. Tiền Mặt (Gồm cả Nợ Tiền Mặt) -->
-        <div class="relative overflow-hidden rounded-2xl bg-amber-50/90 dark:bg-amber-950/30 border-2 border-amber-300/80 dark:border-amber-800/70 p-3.5 sm:p-4">
-          <div class="flex items-center justify-between text-amber-800 dark:text-amber-300 text-[11px] font-bold uppercase tracking-wider">
-            <span>💵 Tiền Mặt (+Nợ TM)</span>
-            <span id="stat-cash-percent" class="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-200/80 dark:bg-amber-900 text-amber-900 dark:text-amber-200">0%</span>
+        <!-- 2. Tiền Mặt (Đồng bộ tông màu chủ đạo) -->
+        <div class="relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 p-4">
+          <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+            <span>Tiền Mặt (+Nợ TM)</span>
+            <span id="stat-cash-percent" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-cobalt-50 dark:bg-slate-700 text-cobalt-700 dark:text-cobalt-200">0%</span>
           </div>
-          <div id="stat-cash-revenue" class="text-xl sm:text-2xl font-extrabold text-amber-700 dark:text-amber-400 mt-1.5">0đ</div>
-          <div id="stat-cash-orders" class="text-[11px] font-medium text-amber-700/80 dark:text-amber-400/80 mt-1">0 đơn tiền mặt</div>
+          <div id="stat-cash-revenue" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-1.5">0đ</div>
+          <div id="stat-cash-orders" class="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-1">0 đơn tiền mặt</div>
         </div>
 
-        <!-- 3. Chuyển Khoản (Gồm cả Nợ Chuyển Khoản) -->
-        <div class="relative overflow-hidden rounded-2xl bg-sky-50/90 dark:bg-sky-950/30 border-2 border-sky-300/80 dark:border-sky-800/70 p-3.5 sm:p-4">
-          <div class="flex items-center justify-between text-sky-800 dark:text-sky-300 text-[11px] font-bold uppercase tracking-wider">
-            <span>🏦 Chuyển Khoản (+Nợ CK)</span>
-            <span id="stat-transfer-percent" class="px-1.5 py-0.5 rounded-full text-[10px] bg-sky-200/80 dark:bg-sky-900 text-sky-900 dark:text-sky-200">0%</span>
+        <!-- 3. Chuyển Khoản (Đồng bộ tông màu chủ đạo) -->
+        <div class="relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 p-4">
+          <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+            <span>Chuyển Khoản (+Nợ CK)</span>
+            <span id="stat-transfer-percent" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-cobalt-50 dark:bg-slate-700 text-cobalt-700 dark:text-cobalt-200">0%</span>
           </div>
-          <div id="stat-transfer-revenue" class="text-xl sm:text-2xl font-extrabold text-sky-700 dark:text-sky-400 mt-1.5">0đ</div>
-          <div id="stat-transfer-orders" class="text-[11px] font-medium text-sky-700/80 dark:text-sky-400/80 mt-1">0 đơn chuyển khoản</div>
+          <div id="stat-transfer-revenue" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-1.5">0đ</div>
+          <div id="stat-transfer-orders" class="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-1">0 đơn chuyển khoản</div>
         </div>
 
-        <!-- 4. Tiền Nợ (Bấm vào để xem danh sách ai đang nợ, ngày nào) -->
+        <!-- 4. Đang Ghi Nợ (Bấm vào để xem sổ nợ) -->
         <button
           type="button"
           id="btn-open-debt-modal"
-          class="text-left relative overflow-hidden rounded-2xl bg-rose-50/90 dark:bg-rose-950/35 border-2 border-rose-300 dark:border-rose-800/80 hover:border-rose-500 p-3.5 sm:p-4 transition group cursor-pointer"
-          title="Bấm vào để xem chi tiết ai đang nợ và ngày nợ"
+          class="text-left relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:border-cobalt-600 p-4 transition group cursor-pointer"
         >
-          <div class="flex items-center justify-between text-rose-800 dark:text-rose-300 text-[11px] font-bold uppercase tracking-wider">
-            <span>📒 Đang Ghi Nợ</span>
-            <span class="px-1.5 py-0.5 rounded-md text-[10px] bg-rose-200/90 dark:bg-rose-900 text-rose-900 dark:text-rose-200 group-hover:bg-rose-600 group-hover:text-white transition">Xem sổ ➔</span>
+          <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+            <span>Đang Ghi Nợ</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cobalt-50 dark:bg-slate-700 text-cobalt-700 dark:text-cobalt-200 group-hover:bg-cobalt-600 group-hover:text-white transition">Sổ nợ ➔</span>
           </div>
-          <div id="stat-debt-revenue" class="text-xl sm:text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-1.5">0đ</div>
-          <div id="stat-debt-orders" class="text-[11px] font-semibold text-rose-700/80 dark:text-rose-400/80 mt-1 truncate">0 đơn nợ • Bấm xem ai nợ</div>
+          <div id="stat-debt-revenue" class="text-xl sm:text-2xl font-extrabold text-cobalt-700 dark:text-cobalt-200 mt-1.5">0đ</div>
+          <div id="stat-debt-orders" class="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-1 truncate">0 đơn nợ</div>
         </button>
 
         <!-- 5. Món Bán Chạy -->
-        <div class="col-span-2 lg:col-span-1 relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 p-3.5 sm:p-4">
+        <div class="col-span-2 lg:col-span-1 relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 p-4">
           <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[11px] font-bold uppercase tracking-wider">
-            <span>🔥 Bán Chạy Nhất</span>
-            <i data-lucide="award" class="w-4 h-4 text-rose-500"></i>
+            <span>Bán Chạy Nhất</span>
+            <i data-lucide="sparkles" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
           </div>
           <div id="stat-best-seller" class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mt-1.5 truncate">Chưa có đơn</div>
-          <div id="stat-best-count" class="text-[11px] font-semibold text-cobalt-600 dark:text-cobalt-200 mt-1">Tạo order đầu tiên!</div>
+          <div id="stat-best-count" class="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-1">Tạo order đầu tiên</div>
         </div>
       </div>
     </header>
@@ -416,52 +424,43 @@
         <div id="menu-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 max-h-[540px] overflow-y-auto pr-1"></div>
       </section>
 
-      <!-- RIGHT COLUMN (5 cols): BILL ORDER, TỰ ĐỘNG ĐỒNG BỘ CA LÀM, GIẢM GIÁ, GHI NỢ & THANH TOÁN -->
-      <section class="lg:col-span-5 glass-panel rounded-3xl border-2 border-cobalt-600/25 dark:border-slate-700 p-4 sm:p-5 shadow-lg sticky top-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-          <div class="flex items-center gap-2">
-            <span id="next-order-code-badge" class="px-2.5 py-1 rounded-xl bg-cobalt-600 text-white font-extrabold text-xs sm:text-sm shadow-sm">
+      <!-- RIGHT COLUMN (5 cols): BILL ORDER -->
+      <section class="lg:col-span-5 glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-5 sticky top-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200/70 dark:border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <span id="next-order-code-badge" class="px-3 py-1 rounded-xl bg-cobalt-600 text-white font-extrabold text-xs sm:text-sm shadow-sm">
               S1
             </span>
-            <div>
-              <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">Phiếu Order Hiện Tại</h2>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400">Mã tự động tăng theo ca thực tế (S • C • T)</p>
-            </div>
+            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">Phiếu Order</h2>
           </div>
 
-          <button id="btn-clear-cart" type="button" class="text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 px-2.5 py-1.5 rounded-lg transition">
-            Xóa trắng
-          </button>
-        </div>
-
-        <!-- Thanh hiển thị Ca làm việc tự động đồng bộ theo giờ thực tế -->
-        <div class="mt-3 px-3.5 py-2 rounded-2xl bg-cobalt-50/80 dark:bg-slate-800/90 border border-cobalt-200/70 dark:border-slate-700 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300">Ca tự động theo giờ:</span>
+            <span id="auto-shift-live-text" class="text-[11px] font-bold text-cobalt-700 dark:text-cobalt-200 bg-cobalt-50 dark:bg-slate-800 px-2.5 py-1 rounded-lg">
+              Ca Sáng
+            </span>
+            <button id="btn-clear-cart" type="button" class="text-xs font-semibold text-slate-400 hover:text-rose-600 px-2 py-1 rounded-lg transition">
+              Làm mới
+            </button>
           </div>
-          <span id="auto-shift-live-text" class="text-xs font-extrabold text-cobalt-700 dark:text-cobalt-200">
-            🌅 Ca Sáng (8h00 - 13h00)
-          </span>
         </div>
 
-        <!-- Bàn / Tên khách & Giảm giá (Nhập số tiền trực tiếp) -->
+        <!-- Bàn / Tên khách & Giảm giá -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 my-3">
           <div>
             <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">
-              Bàn / Tên khách (Ghi tên nếu nợ)
+              Bàn / Tên khách
             </label>
             <input
               id="order-customer"
               type="text"
-              placeholder="VD: Bàn 2, Anh Bình, Chị Hoa..."
-              class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-cobalt-600/40"
+              placeholder="VD: Bàn 2, Anh Bình..."
+              class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-cobalt-600/40"
             />
           </div>
 
           <div>
             <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">
-              Giảm giá / Khấu hao (VNĐ)
+              Giảm giá (VNĐ)
             </label>
             <div class="relative">
               <input
@@ -469,8 +468,8 @@
                 type="number"
                 min="0"
                 step="1000"
-                placeholder="Nhập số tiền giảm (VD: 20000)"
-                class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-cobalt-600/40"
+                placeholder="VD: 20000"
+                class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-cobalt-600/40"
               />
               <button
                 type="button"
@@ -488,83 +487,71 @@
         <div id="cart-items" class="space-y-2.5 max-h-[250px] overflow-y-auto pr-1 my-3"></div>
 
         <!-- General Order Note & Quick Note Tags -->
-        <div class="pt-2.5 border-t border-dashed border-slate-200 dark:border-slate-800">
-          <div class="flex items-center justify-between mb-1.5">
-            <label class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
-              <i data-lucide="message-square-plus" class="w-3.5 h-3.5 text-cobalt-600"></i>
-              <span>Ghi chú đơn hàng:</span>
-            </label>
-            <span class="text-[10px] text-slate-400">Chạm để điền nhanh</span>
-          </div>
-
+        <div class="pt-2.5 border-t border-slate-200/60 dark:border-slate-800">
           <div class="flex items-center gap-1.5 flex-wrap mb-2">
-            <button type="button" data-quick-note="Ít ngọt" class="quick-note-btn px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Ít ngọt</button>
-            <button type="button" data-quick-note="Ít đá" class="quick-note-btn px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Ít đá</button>
-            <button type="button" data-quick-note="Đá riêng" class="quick-note-btn px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Đá riêng</button>
-            <button type="button" data-quick-note="Mang về" class="quick-note-btn px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Mang về</button>
+            <button type="button" data-quick-note="Ít ngọt" class="quick-note-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Ít ngọt</button>
+            <button type="button" data-quick-note="Ít đá" class="quick-note-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Ít đá</button>
+            <button type="button" data-quick-note="Đá riêng" class="quick-note-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Đá riêng</button>
+            <button type="button" data-quick-note="Mang về" class="quick-note-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cobalt-50 hover:text-cobalt-600 transition">+ Mang về</button>
           </div>
 
           <input
             id="order-note"
             type="text"
-            placeholder="Ghi chú chung (VD: 1 ly ít đá, giao bàn ngoài...)"
-            class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cobalt-600/40"
+            placeholder="Ghi chú đơn hàng..."
+            class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cobalt-600/40"
           />
         </div>
 
-        <!-- Hình thức thanh toán: Ưu tiên Tiền Mặt & Chuyển Khoản lớn, Nút Nợ nhỏ ở góc để tránh bấm nhầm -->
-        <div class="mt-3.5 pt-3 border-t border-slate-200 dark:border-slate-800">
+        <!-- Hình thức thanh toán đồng bộ màu sắc -->
+        <div class="mt-3.5 pt-3 border-t border-slate-200/60 dark:border-slate-800">
           <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Hình thức thanh toán *
+            <label class="text-xs font-bold text-slate-500 dark:text-slate-400">
+              Thanh toán
             </label>
-            <!-- Nút Nợ nhỏ gọn để không bấm nhầm -->
             <button
               type="button"
               id="btn-toggle-debt-options"
-              class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/70 hover:bg-rose-100 transition"
-              title="Mở tùy chọn ghi nợ tiền mặt hoặc nợ chuyển khoản"
+              class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-semibold text-slate-500 hover:text-cobalt-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 transition"
             >
               <i data-lucide="notebook-pen" class="w-3 h-3"></i>
-              <span>Ghi nợ?</span>
+              <span>Ghi nợ</span>
             </button>
           </div>
 
-          <!-- 2 Nút Chính Lớn: Tiền mặt & Chuyển khoản -->
           <div class="grid grid-cols-2 gap-2.5">
             <button
               type="button"
               id="pay-cash-btn"
-              class="flex items-center justify-center gap-2 py-3 px-3 rounded-2xl border-2 font-extrabold text-xs sm:text-sm transition border-amber-500 bg-amber-500 text-white shadow-md shadow-amber-500/20"
+              class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl border-2 font-extrabold text-xs sm:text-sm transition border-cobalt-600 bg-cobalt-600 text-white shadow-sm"
             >
-              <span>💵 Tiền Mặt</span>
+              <span>Tiền Mặt</span>
             </button>
 
             <button
               type="button"
               id="pay-transfer-btn"
-              class="flex items-center justify-center gap-2 py-3 px-3 rounded-2xl border-2 font-extrabold text-xs sm:text-sm transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200"
+              class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl border font-bold text-xs sm:text-sm transition border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
             >
-              <span>🏦 Chuyển Khoản</span>
+              <span>Chuyển Khoản</span>
             </button>
           </div>
 
-          <!-- 2 Nút Nợ Nhỏ (Chỉ hiện khi bấm "Ghi nợ?") -->
-          <div id="debt-sub-options" class="hidden mt-2 pt-2 border-t border-dashed border-rose-200 dark:border-rose-900/60 flex items-center justify-end gap-2">
-            <span class="text-[11px] font-semibold text-rose-600 dark:text-rose-400 mr-auto">Chọn loại ghi nợ:</span>
+          <div id="debt-sub-options" class="hidden mt-2 pt-2 border-t border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2">
+            <span class="text-[11px] font-medium text-slate-500 mr-auto">Loại ghi nợ:</span>
             <button
               type="button"
               id="pay-debt-cash-btn"
-              class="px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-rose-300 dark:border-rose-800 bg-white dark:bg-slate-900 text-rose-700 dark:text-rose-300"
+              class="px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300"
             >
-              📒 Nợ Tiền Mặt
+              Nợ Tiền Mặt
             </button>
             <button
               type="button"
               id="pay-debt-transfer-btn"
-              class="px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-rose-300 dark:border-rose-800 bg-white dark:bg-slate-900 text-rose-700 dark:text-rose-300"
+              class="px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300"
             >
-              📒 Nợ Chuyển Khoản
+              Nợ Chuyển Khoản
             </button>
           </div>
         </div>
@@ -592,43 +579,54 @@
       </section>
     </div>
 
-    <!-- BẢNG ĐỐI CHIẾU LỊCH SỬ ĐƠN HÀNG TRONG NGÀY -->
-    <section class="mt-6 glass-panel rounded-3xl border border-slate-200/90 dark:border-slate-800 p-4 sm:p-6 shadow-sm">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-            <i data-lucide="receipt" class="w-5 h-5 text-cobalt-600"></i>
-            <span>Lịch Sử Đơn Hàng & Đối Chiếu Trong Ngày</span>
-          </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Hình thức thanh toán được khóa cố định. Bạn có thể bấm biểu tượng cây bút để sửa thông tin đơn hoặc xóa đơn.
-          </p>
-        </div>
+    <!-- BẢNG ĐỐI CHIẾU LỊCH SỬ ĐƠN HÀNG TRONG NGÀY (10 ĐƠN / TRANG) -->
+    <section class="mt-6 glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200/70 dark:border-slate-800">
+        <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="receipt" class="w-5 h-5 text-cobalt-600"></i>
+          <span>Lịch Sử Đơn Hàng</span>
+        </h2>
 
         <div class="flex items-center gap-1.5 flex-wrap">
           <button type="button" data-pay-filter="all" class="pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-cobalt-600 text-white">Tất cả</button>
-          <button type="button" data-pay-filter="cash" class="pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">💵 Tiền mặt (+Nợ TM)</button>
-          <button type="button" data-pay-filter="transfer" class="pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🏦 Chuyển khoản (+Nợ CK)</button>
-          <button type="button" data-pay-filter="debt" class="pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-rose-600 dark:text-rose-400">📒 Đang nợ</button>
+          <button type="button" data-pay-filter="cash" class="pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Tiền mặt</button>
+          <button type="button" data-pay-filter="transfer" class="pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Chuyển khoản</button>
+          <button type="button" data-pay-filter="debt" class="pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Đang nợ</button>
         </div>
       </div>
 
       <!-- Orders List -->
-      <div class="overflow-x-auto mt-4">
+      <div class="overflow-x-auto mt-3">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-              <th class="py-3 px-3">Mã Ca / Giờ</th>
+            <tr class="border-b border-slate-200/80 dark:border-slate-800 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+              <th class="py-3 px-3">Mã / Giờ</th>
               <th class="py-3 px-3">Khách / Bàn</th>
-              <th class="py-3 px-3">Chi tiết món đã gọi</th>
-              <th class="py-3 px-3">Khấu hao / Ghi chú</th>
-              <th class="py-3 px-3">Thanh toán (Cố định)</th>
+              <th class="py-3 px-3">Chi tiết món</th>
+              <th class="py-3 px-3">Ghi chú</th>
+              <th class="py-3 px-3">Thanh toán</th>
               <th class="py-3 px-3 text-right">Thực thu</th>
-              <th class="py-3 px-3 text-center">Sửa / Xóa</th>
+              <th class="py-3 px-3 text-center">Thao tác</th>
             </tr>
           </thead>
-          <tbody id="order-history-tbody" class="divide-y divide-slate-200/60 dark:divide-slate-800 text-xs sm:text-sm"></tbody>
+          <tbody id="order-history-tbody" class="divide-y divide-slate-200/50 dark:divide-slate-800 text-xs sm:text-sm"></tbody>
         </table>
+      </div>
+
+      <!-- Thanh phân trang (10 đơn / trang) -->
+      <div id="history-pagination" class="hidden mt-4 pt-3 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-500">
+        <span id="history-page-info">Hiển thị 1-10</span>
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="btn-history-prev" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-cobalt-50 disabled:opacity-40 disabled:pointer-events-none transition">
+            ← Trước
+          </button>
+          <span id="history-page-indicator" class="px-2.5 py-1 rounded-lg bg-cobalt-50 dark:bg-slate-800 text-cobalt-700 dark:text-cobalt-200 font-bold">
+            1 / 1
+          </span>
+          <button type="button" id="btn-history-next" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-cobalt-50 disabled:opacity-40 disabled:pointer-events-none transition">
+            Sau →
+          </button>
+        </div>
       </div>
 
       <div id="empty-history" class="hidden text-center py-12 text-slate-400">
@@ -637,37 +635,65 @@
       </div>
     </section>
 
-    <!-- BẢNG TỔNG KẾT DOANH THU CHU KỲ (Đẩy xuống dưới cùng & bấm vào mới hiện ra) -->
-    <section class="mt-6 glass-panel rounded-3xl border border-slate-200/90 dark:border-slate-800 p-4 sm:p-5 shadow-sm">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <!-- BẢNG TỔNG KẾT DOANH THU CHU KỲ -->
+    <section class="mt-5 glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-5">
+      <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-2.5">
           <span class="w-8 h-8 rounded-xl bg-cobalt-600 text-white flex items-center justify-center shrink-0">
             <i data-lucide="bar-chart-horizontal" class="w-4 h-4"></i>
           </span>
-          <div>
-            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
-              Tổng Kết Doanh Thu Chu Kỳ (Tuần • Tháng • Quý • Năm)
-            </h2>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400">
-              Bấm nút bên phải để mở hoặc thu gọn biểu đồ thanh ngang tổng hợp doanh thu
-            </p>
-          </div>
+          <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+            Tổng Kết Doanh Thu Chu Kỳ
+          </h2>
         </div>
 
         <button
           type="button"
           id="btn-toggle-period-bars"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cobalt-50 dark:bg-slate-800 hover:bg-cobalt-600 hover:text-white text-cobalt-700 dark:text-cobalt-200 text-xs font-extrabold border border-cobalt-200 dark:border-slate-700 transition self-start sm:self-auto"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cobalt-50 dark:bg-slate-800 hover:bg-cobalt-600 hover:text-white text-cobalt-700 dark:text-cobalt-200 text-xs font-bold transition"
         >
-          <i data-lucide="eye" class="w-4 h-4"></i>
-          <span id="period-toggle-text">Xem thống kê chu kỳ</span>
+          <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+          <span id="period-toggle-text">Xem thống kê</span>
         </button>
       </div>
 
-      <div id="period-revenue-wrapper" class="hidden mt-4 pt-4 border-t border-slate-200/80 dark:border-slate-800">
+      <div id="period-revenue-wrapper" class="hidden mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-800">
         <div id="period-revenue-bars" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5"></div>
       </div>
     </section>
+
+    <!-- NÚT TÙY CHỈNH HÌNH NỀN & ĐỘ MỜ NHỎ GỌN Ở CUỐI TRANG -->
+    <footer class="mt-6 flex flex-col items-center justify-center gap-2 text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          id="btn-toggle-bg-customizer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-panel border border-slate-200/70 dark:border-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-cobalt-600 transition"
+        >
+          <i data-lucide="image" class="w-3.5 h-3.5"></i>
+          <span>Tùy chỉnh hình nền</span>
+        </button>
+      </div>
+
+      <!-- Khung điều chỉnh ảnh nền và độ mờ (ẩn mặc định) -->
+      <div id="bg-customizer-panel" class="hidden glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 p-3 flex flex-wrap items-center justify-center gap-3 shadow-sm">
+        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cobalt-600 hover:bg-cobalt-700 text-white text-[11px] font-bold cursor-pointer transition">
+          <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+          <span>Tải ảnh lên</span>
+          <input type="file" id="bg-upload-input" accept="image/*" class="hidden" />
+        </label>
+
+        <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+          <span>Độ mờ:</span>
+          <input type="range" id="bg-blur-slider" min="0" max="40" value="16" class="w-24 accent-cobalt-600 cursor-pointer" />
+          <span id="bg-blur-value" class="w-8 text-right">16px</span>
+        </div>
+
+        <button type="button" id="btn-reset-bg" class="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-[11px] font-semibold text-slate-500 hover:text-rose-600 transition">
+          Mặc định
+        </button>
+      </div>
+    </footer>
   </div>
 
   <!-- POPUP THU TIỀN THÀNH CÔNG (Kèm tiếng Ka-ching & Pháo hoa giấy) -->
@@ -979,6 +1005,8 @@
     let menuSearch = '';
     let paymentMethod = 'cash'; // 'cash' | 'transfer' | 'debt_cash' | 'debt_transfer'
     let historyPaymentFilter = 'all';
+    let historyCurrentPage = 1;
+    const HISTORY_PAGE_SIZE = 10;
 
     let editingOrderItems = [];
     let pendingConfirmCallback = null;
@@ -1399,7 +1427,7 @@
         const transW = total > 0 ? Math.max(0, 100 - cashW) : 0;
 
         return `
-          <div class="p-3.5 rounded-2xl bg-slate-50/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 flex flex-col justify-between">
+          <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 flex flex-col justify-between">
             <div class="flex items-center justify-between gap-2">
               <div>
                 <span class="text-xs font-extrabold uppercase tracking-wider text-cobalt-700 dark:text-cobalt-200">${p.label}</span>
@@ -1408,15 +1436,15 @@
               <div class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">${formatVND(total)}</div>
             </div>
 
-            <div class="w-full h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex my-2.5">
-              <div style="width: ${cashW}%" class="bg-amber-500 h-full transition-all duration-500" title="Tiền mặt (+Nợ TM): ${formatVND(cash)}"></div>
-              <div style="width: ${transW}%" class="bg-sky-500 h-full transition-all duration-500" title="Chuyển khoản (+Nợ CK): ${formatVND(transfer)}"></div>
+            <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex my-3">
+              <div style="width: ${cashW}%" class="bg-cobalt-600 h-full transition-all duration-500" title="Tiền mặt: ${formatVND(cash)}"></div>
+              <div style="width: ${transW}%" class="bg-cobalt-200 dark:bg-cobalt-800 h-full transition-all duration-500" title="Chuyển khoản: ${formatVND(transfer)}"></div>
             </div>
 
-            <div class="flex items-center justify-between text-[10px] font-bold text-slate-600 dark:text-slate-300">
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>TM: ${formatVND(cash)}</span>
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span>CK: ${formatVND(transfer)}</span>
-              <span class="flex items-center gap-1 text-rose-600 dark:text-rose-400">Đang nợ: ${formatVND(debt)}</span>
+            <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cobalt-600"></span>TM: ${formatVND(cash)}</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cobalt-200 dark:bg-cobalt-800"></span>CK: ${formatVND(transfer)}</span>
+              <span class="flex items-center gap-1">Nợ: ${formatVND(debt)}</span>
             </div>
           </div>
         `;
@@ -1623,15 +1651,15 @@
 
     function getPaymentBadgeHTML(method) {
       if (method === 'transfer') {
-        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-extrabold bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300 border border-sky-300/60">🏦 Chuyển khoản</span>`;
+        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold bg-cobalt-50 dark:bg-slate-800 text-cobalt-700 dark:text-cobalt-200 border border-cobalt-200/70 dark:border-slate-700">Chuyển khoản</span>`;
       }
       if (method === 'debt_cash') {
-        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-extrabold bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-300">📒 Nợ Tiền Mặt</span>`;
+        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600">Nợ Tiền Mặt</span>`;
       }
       if (method === 'debt_transfer') {
-        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-extrabold bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-300">📒 Nợ Chuyển Khoản</span>`;
+        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600">Nợ Chuyển Khoản</span>`;
       }
-      return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-extrabold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300/60">💵 Tiền mặt</span>`;
+      return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700">Tiền mặt</span>`;
     }
 
     function renderDashboardAndHistory() {
@@ -1708,11 +1736,12 @@
         document.getElementById('stat-best-count').textContent = `Đã bán ${sortedDrinks[0][1]} ly hôm nay`;
       } else {
         document.getElementById('stat-best-seller').textContent = 'Chưa có đơn';
-        document.getElementById('stat-best-count').textContent = 'Tạo order đầu tiên!';
+        document.getElementById('stat-best-count').textContent = 'Tạo order đầu tiên';
       }
 
       const tbody = document.getElementById('order-history-tbody');
       const emptyEl = document.getElementById('empty-history');
+      const paginationEl = document.getElementById('history-pagination');
 
       const filteredHistory = dayOrders.filter(o => {
         if (historyPaymentFilter === 'cash') return o.paymentMethod === 'cash' || o.paymentMethod === 'debt_cash';
@@ -1724,12 +1753,34 @@
       if (filteredHistory.length === 0) {
         tbody.innerHTML = '';
         emptyEl.classList.remove('hidden');
+        if (paginationEl) paginationEl.classList.add('hidden');
         lucide.createIcons();
         return;
       }
 
       emptyEl.classList.add('hidden');
-      tbody.innerHTML = filteredHistory.map(o => {
+
+      const totalPages = Math.max(1, Math.ceil(filteredHistory.length / HISTORY_PAGE_SIZE));
+      if (historyCurrentPage > totalPages) historyCurrentPage = totalPages;
+      if (historyCurrentPage < 1) historyCurrentPage = 1;
+
+      const startIdx = (historyCurrentPage - 1) * HISTORY_PAGE_SIZE;
+      const pagedOrders = filteredHistory.slice(startIdx, startIdx + HISTORY_PAGE_SIZE);
+
+      if (paginationEl) {
+        if (filteredHistory.length > HISTORY_PAGE_SIZE) {
+          paginationEl.classList.remove('hidden');
+          const endIdx = Math.min(startIdx + HISTORY_PAGE_SIZE, filteredHistory.length);
+          document.getElementById('history-page-info').textContent = `Đơn ${startIdx + 1}-${endIdx} / ${filteredHistory.length}`;
+          document.getElementById('history-page-indicator').textContent = `Trang ${historyCurrentPage} / ${totalPages}`;
+          document.getElementById('btn-history-prev').disabled = historyCurrentPage <= 1;
+          document.getElementById('btn-history-next').disabled = historyCurrentPage >= totalPages;
+        } else {
+          paginationEl.classList.add('hidden');
+        }
+      }
+
+      tbody.innerHTML = pagedOrders.map(o => {
         const displayCode = o.orderCode || `#${String(o.id).slice(-4)}`;
         const itemsSummary = (o.items || []).map(i => {
           const notePart = i.itemNote ? ` <em class="text-cobalt-600 dark:text-cobalt-200">(${i.itemNote})</em>` : '';
@@ -1737,13 +1788,13 @@
         }).join('');
 
         const discountBadge = o.discount > 0
-          ? `<div class="inline-block px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold mb-1">Giảm: -${formatVND(o.discount)}</div>`
+          ? `<div class="inline-block px-2 py-0.5 rounded bg-cobalt-50 dark:bg-slate-800 text-cobalt-700 dark:text-cobalt-200 text-[10px] font-bold mb-1">Giảm: -${formatVND(o.discount)}</div>`
           : '';
 
         return `
-          <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+          <tr class="hover:bg-white/60 dark:hover:bg-slate-800/40 transition">
             <td class="py-3 px-3 font-mono text-xs">
-              <span class="inline-flex items-center px-2.5 py-1 rounded-lg font-extrabold bg-cobalt-50 dark:bg-slate-800 text-cobalt-700 dark:text-cobalt-200 border border-cobalt-200 dark:border-slate-700">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-lg font-extrabold bg-cobalt-50 dark:bg-slate-800 text-cobalt-700 dark:text-cobalt-200">
                 ${displayCode}
               </span>
               <div class="text-[11px] text-slate-400 mt-1">${o.timeStr || ''}</div>
@@ -1756,7 +1807,7 @@
             </td>
             <td class="py-3 px-3 text-xs">
               ${discountBadge}
-              <div class="text-amber-700 dark:text-amber-400">${o.note || '—'}</div>
+              <div class="text-slate-500 dark:text-slate-400">${o.note || '—'}</div>
             </td>
             <td class="py-3 px-3">
               ${getPaymentBadgeHTML(o.paymentMethod)}
@@ -1973,360 +2024,105 @@
       const debtCashBtn = document.getElementById('pay-debt-cash-btn');
       const debtTransBtn = document.getElementById('pay-debt-transfer-btn');
 
-      const inactiveMain = 'flex items-center justify-center gap-2 py-3 px-3 rounded-2xl border-2 font-extrabold text-xs sm:text-sm transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200';
-      const inactiveDebt = 'px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-rose-300 dark:border-rose-800 bg-white dark:bg-slate-900 text-rose-700 dark:text-rose-300';
+      const inactiveMain = 'flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl border font-bold text-xs sm:text-sm transition border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200';
+      const activeMain = 'flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl border-2 font-extrabold text-xs sm:text-sm transition border-cobalt-600 bg-cobalt-600 text-white shadow-sm';
+      const inactiveDebt = 'px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300';
+      const activeDebt = 'px-2.5 py-1.5 rounded-xl border-2 text-[11px] font-extrabold transition border-cobalt-600 bg-cobalt-600 text-white shadow-sm';
 
-      cashBtn.className = inactiveMain;
-      transBtn.className = inactiveMain;
-      debtCashBtn.className = inactiveDebt;
-      debtTransBtn.className = inactiveDebt;
+      cashBtn.className = method === 'cash' ? activeMain : inactiveMain;
+      transBtn.className = method === 'transfer' ? activeMain : inactiveMain;
+      debtCashBtn.className = method === 'debt_cash' ? activeDebt : inactiveDebt;
+      debtTransBtn.className = method === 'debt_transfer' ? activeDebt : inactiveDebt;
+    }
 
-      if (method === 'cash') {
-        cashBtn.className = 'flex items-center justify-center gap-2 py-3 px-3 rounded-2xl border-2 font-extrabold text-xs sm:text-sm transition border-amber-500 bg-amber-500 text-white shadow-md shadow-amber-500/20';
-      } else if (method === 'transfer') {
-        transBtn.className = 'flex items-center justify-center gap-2 py-3 px-3 rounded-2xl border-2 font-extrabold text-xs sm:text-sm transition border-sky-500 bg-sky-500 text-white shadow-md shadow-sky-500/20';
-      } else if (method === 'debt_cash') {
-        debtCashBtn.className = 'px-2.5 py-1.5 rounded-xl border-2 text-[11px] font-extrabold transition border-rose-600 bg-rose-600 text-white shadow-sm';
-      } else if (method === 'debt_transfer') {
-        debtTransBtn.className = 'px-2.5 py-1.5 rounded-xl border-2 text-[11px] font-extrabold transition border-rose-600 bg-rose-600 text-white shadow-sm';
+    function applyCustomBackground(dataUrl, blurPx) {
+      const layer = document.getElementById('custom-bg-layer');
+      const imgEl = document.getElementById('custom-bg-image');
+      if (!layer || !imgEl) return;
+
+      if (dataUrl) {
+        layer.classList.remove('hidden');
+        imgEl.style.backgroundImage = `url(${dataUrl})`;
+        imgEl.style.filter = `blur(${blurPx}px)`;
+      } else {
+        layer.classList.add('hidden');
+        imgEl.style.backgroundImage = '';
       }
     }
 
     function renderMenuManagerList() {
-      const list = document.getElementById('menu-manager-list');
-      list.innerHTML = menuItems.map(m => `
-        <div class="py-2.5 flex items-center justify-between gap-2">
-          <div>
-            <span class="font-bold text-slate-900 dark:text-white">${m.name}</span>
-            <span class="ml-2 px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500">${m.category}</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="font-extrabold text-cobalt-600 dark:text-amber-400">${formatVND(m.price)}</span>
-            <button type="button" data-del-menu="${m.id}" class="del-menu-btn text-slate-400 hover:text-rose-600 p-1">
-              <i data-lucide="trash" class="w-4 h-4"></i>
-            </button>
-          </div>
-        </div>
-      `).join('');
-
-      list.querySelectorAll('.del-menu-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const id = btn.getAttribute('data-del-menu');
-          menuItems = menuItems.filter(x => x.id !== id);
-          if (db) {
-            try { await deleteDoc(doc(db, 'mimi_menu', id)); } catch (e) {}
-          }
-          saveLocalFallback();
-          renderMenuManagerList();
-          renderMenuGrid();
-          showToast('Đã xóa món khỏi menu!');
-        });
-      });
-
-      lucide.createIcons();
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      document.getElementById('toast-msg').textContent = msg;
-      t.classList.remove('translate-y-20', 'opacity-0');
-      setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 2400);
-    }
-
+// ... existing code ... -->
     function initEvents() {
       const dateInput = document.getElementById('filter-date');
       dateInput.value = selectedDate;
       dateInput.addEventListener('change', (e) => {
         selectedDate = e.target.value || getTodayStr();
+        historyCurrentPage = 1;
         updateShiftUI();
         renderDashboardAndHistory();
+      });
+
+      // Nút chuyển trang lịch sử (10 đơn / trang)
+      document.getElementById('btn-history-prev')?.addEventListener('click', () => {
+        if (historyCurrentPage > 1) {
+          historyCurrentPage -= 1;
+          renderDashboardAndHistory();
+        }
+      });
+      document.getElementById('btn-history-next')?.addEventListener('click', () => {
+        historyCurrentPage += 1;
+        renderDashboardAndHistory();
+      });
+
+      // Tùy chỉnh hình nền & độ mờ (Blur)
+      let currentBgUrl = localStorage.getItem('mimi_pos_custom_bg') || '';
+      let currentBgBlur = Number(localStorage.getItem('mimi_pos_custom_blur') || 16);
+      const blurSlider = document.getElementById('bg-blur-slider');
+      const blurValText = document.getElementById('bg-blur-value');
+      if (blurSlider && blurValText) {
+        blurSlider.value = currentBgBlur;
+        blurValText.textContent = `${currentBgBlur}px`;
+      }
+      applyCustomBackground(currentBgUrl, currentBgBlur);
+
+      document.getElementById('btn-toggle-bg-customizer')?.addEventListener('click', () => {
+        document.getElementById('bg-customizer-panel')?.classList.toggle('hidden');
+      });
+
+      document.getElementById('bg-upload-input')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          currentBgUrl = ev.target?.result || '';
+          try { localStorage.setItem('mimi_pos_custom_bg', currentBgUrl); } catch (err) {}
+          applyCustomBackground(currentBgUrl, currentBgBlur);
+          showToast('Đã cập nhật hình nền!');
+        };
+        reader.readAsDataURL(file);
+      });
+
+      blurSlider?.addEventListener('input', (e) => {
+        currentBgBlur = Number(e.target.value || 0);
+        if (blurValText) blurValText.textContent = `${currentBgBlur}px`;
+        try { localStorage.setItem('mimi_pos_custom_blur', String(currentBgBlur)); } catch (err) {}
+        applyCustomBackground(currentBgUrl, currentBgBlur);
+      });
+
+      document.getElementById('btn-reset-bg')?.addEventListener('click', () => {
+        currentBgUrl = '';
+        try { localStorage.removeItem('mimi_pos_custom_bg'); } catch (err) {}
+        applyCustomBackground('', currentBgBlur);
+        showToast('Đã về nền mặc định!');
       });
 
       // Chọn màu chủ đạo
-      const savedThemeColor = localStorage.getItem('mimi_pos_theme_color') || 'cobalt';
-      document.body.setAttribute('data-theme', savedThemeColor);
-      document.querySelectorAll('.theme-dot').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const theme = btn.getAttribute('data-theme-btn');
-          document.body.setAttribute('data-theme', theme);
-          localStorage.setItem('mimi_pos_theme_color', theme);
-          showToast('Đã đổi màu giao diện!');
-        });
-      });
-
-      // Ban ngày / Ban đêm
-      document.getElementById('btn-theme-toggle').addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-      });
-
-      // Lịch Ca Làm Việc Tuần
-      const scheduleSec = document.getElementById('shift-schedule-section');
-      document.getElementById('btn-toggle-schedule').addEventListener('click', () => {
-        scheduleSec.classList.toggle('hidden');
-        renderShiftScheduleTable();
-      });
-      document.getElementById('btn-close-schedule').addEventListener('click', () => {
-        scheduleSec.classList.add('hidden');
-      });
-      document.getElementById('btn-prev-week').addEventListener('click', () => {
-        scheduleWeekOffset -= 1;
-        renderShiftScheduleTable();
-      });
-      document.getElementById('btn-next-week').addEventListener('click', () => {
-        scheduleWeekOffset += 1;
-        renderShiftScheduleTable();
-      });
-      document.getElementById('btn-current-week').addEventListener('click', () => {
-        scheduleWeekOffset = 0;
-        renderShiftScheduleTable();
-      });
-
-      document.getElementById('add-shift-staff-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const staffName = document.getElementById('shift-staff-name').value.trim();
-        const dateStr = document.getElementById('shift-day-select').value;
-        const shiftCode = document.getElementById('shift-type-select').value;
-        if (!staffName || !dateStr || !shiftCode) return;
-
-        const key = `${dateStr}_${shiftCode}`;
-        if (!Array.isArray(weeklyShifts[key])) weeklyShifts[key] = [];
-        if (weeklyShifts[key].length >= 4) {
-          showToast('Mỗi ca tối đa 4 nhân viên!');
-          return;
-        }
-        weeklyShifts[key].push(staffName);
-        document.getElementById('shift-staff-name').value = '';
-        await persistWeeklyShifts();
-        showToast(`Đã xếp ${staffName} vào ${SHIFT_META[shiftCode].name} (${dateStr})`);
-      });
-
-      // Bật / Tắt bảng Tổng kết doanh thu chu kỳ ở dưới cùng
-      document.getElementById('btn-toggle-period-bars').addEventListener('click', () => {
-        const wrapper = document.getElementById('period-revenue-wrapper');
-        const label = document.getElementById('period-toggle-text');
-        const isHidden = wrapper.classList.toggle('hidden');
-        label.textContent = isHidden ? 'Xem thống kê chu kỳ' : 'Thu gọn thống kê';
-        if (!isHidden) renderPeriodRevenueBars();
-      });
-
-      // Mở / Đóng Modal Nhật Ký Hoạt Động
-      const actModal = document.getElementById('activity-log-modal');
-      document.getElementById('btn-open-activity-log').addEventListener('click', () => {
-        renderActivityLogModal();
-        actModal.classList.remove('hidden');
-      });
-      document.getElementById('btn-close-activity-modal').addEventListener('click', () => {
-        actModal.classList.add('hidden');
-      });
-      actModal.addEventListener('click', (e) => {
-        if (e.target.id === 'activity-log-modal') actModal.classList.add('hidden');
-      });
-
-      // Xử lý nút trong Popup xác nhận "Bạn đã chắc chắn chưa?"
-      document.getElementById('btn-confirm-no').addEventListener('click', closeConfirmModal);
-      document.getElementById('btn-confirm-yes').addEventListener('click', async () => {
-        const fn = pendingConfirmCallback;
-        closeConfirmModal();
-        if (typeof fn === 'function') await fn();
-      });
-
-      // Xử lý Modal Sửa Đơn Hàng
-      const editOrderModal = document.getElementById('edit-order-modal');
-      document.getElementById('btn-close-edit-order').addEventListener('click', () => editOrderModal.classList.add('hidden'));
-      document.getElementById('btn-cancel-edit-order').addEventListener('click', () => editOrderModal.classList.add('hidden'));
-      document.getElementById('edit-order-discount').addEventListener('input', renderEditingOrderItems);
-
-      document.getElementById('btn-edit-order-add-drink').addEventListener('click', () => {
-        const drinkId = document.getElementById('edit-order-add-drink-select').value;
-        const drink = menuItems.find(m => m.id === drinkId);
-        if (!drink) return;
-        const existing = editingOrderItems.find(i => i.id === drink.id);
-        if (existing) existing.qty += 1;
-        else editingOrderItems.push({ id: drink.id, name: drink.name, price: Number(drink.price), qty: 1, itemNote: '' });
-        renderEditingOrderItems();
-      });
-
-      document.getElementById('edit-order-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (editingOrderItems.length === 0) {
-          showToast('Đơn hàng phải có ít nhất 1 món!');
-          return;
-        }
-        const orderId = document.getElementById('edit-order-id').value;
-        const target = orders.find(o => o.id === orderId);
-        if (!target) return;
-
-        const newCustomer = document.getElementById('edit-order-customer').value.trim() || 'Khách tại quán';
-        const newDiscount = Number(document.getElementById('edit-order-discount').value || 0);
-        const newNote = document.getElementById('edit-order-note').value.trim();
-        const newSubtotal = editingOrderItems.reduce((s, i) => s + Number(i.price) * Number(i.qty), 0);
-        const newTotal = Math.max(0, newSubtotal - newDiscount);
-
-        openConfirmModal(
-          'Bạn đã chắc chắn lưu thay đổi chưa?',
-          `Đơn ${target.orderCode || ''} sẽ được cập nhật thành ${formatVND(newTotal)} (${newCustomer}).`,
-          async () => {
-            target.customer = newCustomer;
-            target.discount = newDiscount;
-            target.note = newNote;
-            target.subtotal = newSubtotal;
-            target.totalAmount = newTotal;
-            target.items = editingOrderItems.map(i => ({ ...i }));
-
-            if (db) {
-              try { await setDoc(doc(db, 'mimi_orders', target.id), target); } catch (e) {}
-            }
-            await logActivity('edit', `Đã sửa đơn ${target.orderCode || ''} (${newCustomer} • Thực thu mới: ${formatVND(newTotal)})`);
-            saveLocalFallback();
-            editOrderModal.classList.add('hidden');
-            renderDashboardAndHistory();
-            renderPeriodRevenueBars();
-            showToast(`Đã cập nhật đơn ${target.orderCode || ''}!`);
-          }
-        );
-      });
-
-      // Đóng Popup Thu Tiền Thành Công
-      const successModal = document.getElementById('checkout-success-modal');
-      document.getElementById('btn-close-success-modal').addEventListener('click', () => {
-        successModal.classList.add('hidden');
-      });
-      successModal.addEventListener('click', (e) => {
-        if (e.target.id === 'checkout-success-modal') successModal.classList.add('hidden');
-      });
-
-      // Tìm món
-      document.getElementById('menu-search').addEventListener('input', (e) => {
-        menuSearch = e.target.value.trim();
-        renderMenuGrid();
-      });
-
-      document.getElementById('order-discount').addEventListener('input', () => {
-        renderCart();
-      });
-
-      document.getElementById('btn-clear-discount').addEventListener('click', () => {
-        document.getElementById('order-discount').value = '';
-        renderCart();
-      });
-
-      // Xóa trắng giỏ hàng
-      document.getElementById('btn-clear-cart').addEventListener('click', () => {
-        cart = [];
-        document.getElementById('order-customer').value = '';
-        document.getElementById('order-note').value = '';
-        document.getElementById('order-discount').value = '';
-        setPaymentMethodUI('cash');
-        renderCart();
-        renderMenuGrid();
-      });
-
-      // Quick note chips
-      document.querySelectorAll('.quick-note-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const text = btn.getAttribute('data-quick-note');
-          const input = document.getElementById('order-note');
-          input.value = input.value ? `${input.value}, ${text}` : text;
-        });
-      });
-
-      // Chọn Tiền mặt / Chuyển khoản / Nợ
-      document.getElementById('pay-cash-btn').addEventListener('click', () => setPaymentMethodUI('cash'));
-      document.getElementById('pay-transfer-btn').addEventListener('click', () => setPaymentMethodUI('transfer'));
-      document.getElementById('btn-toggle-debt-options').addEventListener('click', () => {
-        const sub = document.getElementById('debt-sub-options');
-        sub.classList.toggle('hidden');
-      });
-      document.getElementById('pay-debt-cash-btn').addEventListener('click', () => setPaymentMethodUI('debt_cash'));
-      document.getElementById('pay-debt-transfer-btn').addEventListener('click', () => setPaymentMethodUI('debt_transfer'));
-
-      // Lưu đơn hàng với mã S1, S2 / C1, C2 / T1, T2 tự động theo giờ thực tế
-      document.getElementById('btn-submit-order').addEventListener('click', async () => {
-        if (cart.length === 0) {
-          showToast('Vui lòng chọn ít nhất 1 món nước!');
-          return;
-        }
-
-        currentOrderShift = detectCurrentShiftCode();
-
-        const isDebt = paymentMethod === 'debt_cash' || paymentMethod === 'debt_transfer';
-        const customerInput = document.getElementById('order-customer');
-        const customer = customerInput.value.trim();
-
-        if (isDebt && !customer) {
-          customerInput.focus();
-          showToast('Vui lòng nhập tên người nợ vào ô Bàn / Tên khách!');
-          return;
-        }
-
-        const subtotal = getCartSubtotal();
-        const discount = Number(document.getElementById('order-discount').value || 0);
-        const totalAmount = Math.max(0, subtotal - discount);
-        const note = document.getElementById('order-note').value.trim();
-
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-        const nextCodeObj = getNextShiftOrderCode(selectedDate, currentOrderShift);
-
-        const newOrder = {
-          id: String(Date.now()),
-          createdAt: Date.now(),
-          dateStr: selectedDate,
-          timeStr,
-          shiftCode: currentOrderShift,
-          shiftSeq: nextCodeObj.seq,
-          orderCode: nextCodeObj.code,
-          customer: customer || 'Khách tại quán',
-          note,
-          subtotal,
-          discount,
-          totalAmount,
-          paymentMethod,
-          items: cart.map(i => ({ ...i }))
-        };
-
-        orders.unshift(newOrder);
-        if (db) {
-          try { await setDoc(doc(db, 'mimi_orders', newOrder.id), newOrder); } catch (e) {}
-        }
-
-        const itemsBrief = newOrder.items.map(i => `${i.qty}x ${i.name}`).join(', ');
-        await logActivity('create', `Lên đơn ${newOrder.orderCode} cho "${newOrder.customer}" (${itemsBrief}) • ${formatVND(totalAmount)}`);
-        saveLocalFallback();
-
-        let payText = 'Tiền mặt';
-        if (paymentMethod === 'transfer') payText = 'Chuyển khoản';
-        else if (paymentMethod === 'debt_cash') payText = 'Ghi nợ Tiền mặt';
-        else if (paymentMethod === 'debt_transfer') payText = 'Ghi nợ Chuyển khoản';
-
-        document.getElementById('success-order-code').textContent = `Mã đơn: ${newOrder.orderCode} (${SHIFT_META[currentOrderShift].name})`;
-        document.getElementById('success-order-customer').textContent = `${newOrder.customer} • ${payText}`;
-        document.getElementById('success-order-amount').textContent = formatVND(totalAmount);
-        document.getElementById('success-order-items').innerHTML = newOrder.items.map(i =>
-          `<div class="flex justify-between"><span>• <strong>${i.qty}x</strong> ${i.name}</span><span class="font-bold">${formatVND(i.price * i.qty)}</span></div>`
-        ).join('');
-        document.getElementById('checkout-success-modal').classList.remove('hidden');
-
-        triggerCashRegisterSoundAndConfetti();
-
-        cart = [];
-        customerInput.value = '';
-        document.getElementById('order-note').value = '';
-        document.getElementById('order-discount').value = '';
-        document.getElementById('debt-sub-options').classList.add('hidden');
-        setPaymentMethodUI('cash');
-
-        updateShiftUI();
-        renderCart();
-        renderMenuGrid();
-        renderDashboardAndHistory();
-        renderPeriodRevenueBars();
-      });
-
+// ... existing code ... -->
       // Lọc lịch sử theo hình thức thanh toán
       document.querySelectorAll('.pay-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           historyPaymentFilter = btn.getAttribute('data-pay-filter');
+          historyCurrentPage = 1;
           document.querySelectorAll('.pay-filter-btn').forEach(b => {
             b.className = 'pay-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
           });
