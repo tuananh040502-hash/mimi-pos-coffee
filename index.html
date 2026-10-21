@@ -2,8 +2,108 @@
 <html lang="vi" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Mì Mí POS • Quản Lý Bán Hàng & Doanh Thu</title>
+
+  <!-- Cấu hình Web App & Icon Màn Hình Chính iPhone (iOS Home Screen) -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="mìmí POS" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="logo.png" />
+  <link id="favicon-link" rel="icon" type="image/png" href="logo.png" />
+
+  <!-- Tự động vẽ chuẩn Logo "mìmí" (Nền trắng - Chữ xanh Cobalt) làm Icon App cho iPhone & Trình duyệt -->
+  <script>
+    (function generateMimiAppIcon() {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+
+        // Nền trắng chuẩn theo logo ava mìmí
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, 512, 512);
+
+        // Màu xanh Cobalt nguyên bản từ logo mìmí (#0E3F8F)
+        ctx.strokeStyle = '#0E3F8F';
+        ctx.fillStyle = '#0E3F8F';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // 1. Chữ 'm' đầu tiên
+        ctx.lineWidth = 24;
+        ctx.beginPath();
+        ctx.moveTo(116, 238);
+        ctx.quadraticCurveTo(123, 250, 121, 294);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(122, 260);
+        ctx.bezierCurveTo(132, 232, 162, 232, 164, 262);
+        ctx.quadraticCurveTo(165, 280, 163, 295);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(164, 264);
+        ctx.bezierCurveTo(176, 238, 208, 238, 207, 266);
+        ctx.quadraticCurveTo(206, 282, 204, 294);
+        ctx.stroke();
+
+        // 2. Chữ 'ì' (thân + chấm tròn + dấu huyền)
+        ctx.beginPath();
+        ctx.moveTo(240, 264);
+        ctx.quadraticCurveTo(237, 280, 237, 293);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(242, 241, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.lineWidth = 20;
+        ctx.beginPath();
+        ctx.moveTo(232, 206);
+        ctx.quadraticCurveTo(244, 216, 258, 222);
+        ctx.stroke();
+
+        // 3. Chữ 'm' thứ hai
+        ctx.lineWidth = 24;
+        ctx.beginPath();
+        ctx.moveTo(278, 238);
+        ctx.bezierCurveTo(298, 230, 309, 252, 305, 294);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(306, 266);
+        ctx.bezierCurveTo(320, 235, 353, 236, 355, 268);
+        ctx.quadraticCurveTo(356, 282, 357, 290);
+        ctx.stroke();
+
+        // 4. Chữ 'í' (thân + chấm tròn + dấu sắc)
+        ctx.beginPath();
+        ctx.moveTo(388, 264);
+        ctx.quadraticCurveTo(385, 280, 385, 293);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(390, 243, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.lineWidth = 20;
+        ctx.beginPath();
+        ctx.moveTo(376, 223);
+        ctx.quadraticCurveTo(392, 217, 402, 207);
+        ctx.stroke();
+
+        const pngDataUrl = canvas.toDataURL('image/png');
+        const appleLink = document.getElementById('apple-touch-icon-link');
+        const favLink = document.getElementById('favicon-link');
+        if (appleLink) appleLink.href = pngDataUrl;
+        if (favLink) favLink.href = pngDataUrl;
+      } catch (e) {}
+    })();
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -167,15 +267,20 @@
       <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <!-- Brand & Status -->
         <div class="flex items-center gap-3.5 shrink-0">
-          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-cobalt-600 text-white flex items-center justify-center shadow-md shrink-0">
-            <!-- V60 Coffee Dripper SVG Sketch -->
-            <svg class="w-8 h-8 sm:w-9 sm:h-9" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 14 C12 9, 52 9, 52 14 L40 38 L24 38 Z" />
-              <ellipse cx="32" cy="14" rx="20" ry="4" />
-              <path d="M18 38 C16 42, 48 42, 46 38" />
-              <path d="M20 42 C18 47, 46 47, 44 42" />
-              <path d="M22 47 L19 56 L45 56 L42 47" />
-              <path d="M44 22 C54 22, 54 35, 42 35" />
+          <div class="w-14 h-12 sm:w-16 sm:h-14 rounded-2xl bg-white border border-slate-200/90 dark:border-slate-700 flex items-center justify-center shadow-md shrink-0 overflow-hidden p-1">
+            <!-- Logo mìmí chuẩn theo bộ nhận diện của quán -->
+            <svg class="w-full h-full" viewBox="85 180 345 145" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M116 238 Q123 250 121 294" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M122 260 C132 232 162 232 164 262 Q165 280 163 295" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M164 264 C176 238 208 238 207 266 Q206 282 204 294" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M240 264 Q237 280 237 293" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round"/>
+              <circle cx="242" cy="241" r="11" fill="#0E3F8F"/>
+              <path d="M232 206 Q244 216 258 222" stroke="#0E3F8F" stroke-width="20" stroke-linecap="round"/>
+              <path d="M278 238 C298 230 309 252 305 294" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M306 266 C320 235 353 236 355 268 Q356 282 357 290" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M388 264 Q385 280 385 293" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round"/>
+              <circle cx="390" cy="243" r="11" fill="#0E3F8F"/>
+              <path d="M376 223 Q392 217 402 207" stroke="#0E3F8F" stroke-width="20" stroke-linecap="round"/>
             </svg>
           </div>
 
@@ -482,8 +587,8 @@
     <!-- POS WORKSPACE: LEFT (MENU) & RIGHT (ORDER BILL) CÂN XỨNG CHIỀU CAO -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
 
-      <!-- LEFT COLUMN (7 cols): MENU MÌ MÍ -->
-      <section class="lg:col-span-7 glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-5 flex flex-col lg:h-[680px]">
+      <!-- LEFT COLUMN (7 cols): MENU MÌ MÍ (Đóng khung cuộn gọn gàng trên cả Điện thoại & Máy tính) -->
+      <section class="lg:col-span-7 glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-5 flex flex-col h-[440px] sm:h-[520px] lg:h-[680px]">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5 shrink-0">
           <!-- Ô tìm kiếm món có nút X xóa nhanh -->
           <div class="relative flex-1">
@@ -517,8 +622,8 @@
         <!-- Category Tabs -->
         <div id="category-tabs" class="flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 shrink-0"></div>
 
-        <!-- Menu Items Grid (Tự co giãn lấp đầy khung cân xứng với Phiếu Order) -->
-        <div id="menu-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 flex-1 overflow-y-auto pr-1 auto-rows-max content-start"></div>
+        <!-- Menu Items Grid (Cuộn mượt bên trong bảng trên cả điện thoại và máy tính) -->
+        <div id="menu-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 flex-1 overflow-y-auto overscroll-contain pr-1 auto-rows-max content-start"></div>
       </section>
 
       <!-- RIGHT COLUMN (5 cols): PHIẾU ORDER -->
