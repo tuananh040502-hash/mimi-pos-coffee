@@ -12,94 +12,17 @@
   <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="logo.png" />
   <link id="favicon-link" rel="icon" type="image/png" href="logo.png" />
 
-  <!-- Tự động vẽ chuẩn Logo "mìmí" (Nền trắng - Chữ xanh Cobalt) làm Icon App cho iPhone & Trình duyệt -->
+  <!-- Tự động nạp Logo đã tải lên làm Icon App cho iPhone & Trình duyệt -->
   <script>
-    (function generateMimiAppIcon() {
+    (function loadSavedAppIcon() {
       try {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 512;
-        const ctx = canvas.getContext('2d');
-
-        // Nền trắng chuẩn theo logo ava mìmí
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, 512, 512);
-
-        // Màu xanh Cobalt nguyên bản từ logo mìmí (#0E3F8F)
-        ctx.strokeStyle = '#0E3F8F';
-        ctx.fillStyle = '#0E3F8F';
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        // 1. Chữ 'm' đầu tiên
-        ctx.lineWidth = 24;
-        ctx.beginPath();
-        ctx.moveTo(116, 238);
-        ctx.quadraticCurveTo(123, 250, 121, 294);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(122, 260);
-        ctx.bezierCurveTo(132, 232, 162, 232, 164, 262);
-        ctx.quadraticCurveTo(165, 280, 163, 295);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(164, 264);
-        ctx.bezierCurveTo(176, 238, 208, 238, 207, 266);
-        ctx.quadraticCurveTo(206, 282, 204, 294);
-        ctx.stroke();
-
-        // 2. Chữ 'ì' (thân + chấm tròn + dấu huyền)
-        ctx.beginPath();
-        ctx.moveTo(240, 264);
-        ctx.quadraticCurveTo(237, 280, 237, 293);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(242, 241, 10, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.lineWidth = 20;
-        ctx.beginPath();
-        ctx.moveTo(232, 206);
-        ctx.quadraticCurveTo(244, 216, 258, 222);
-        ctx.stroke();
-
-        // 3. Chữ 'm' thứ hai
-        ctx.lineWidth = 24;
-        ctx.beginPath();
-        ctx.moveTo(278, 238);
-        ctx.bezierCurveTo(298, 230, 309, 252, 305, 294);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(306, 266);
-        ctx.bezierCurveTo(320, 235, 353, 236, 355, 268);
-        ctx.quadraticCurveTo(356, 282, 357, 290);
-        ctx.stroke();
-
-        // 4. Chữ 'í' (thân + chấm tròn + dấu sắc)
-        ctx.beginPath();
-        ctx.moveTo(388, 264);
-        ctx.quadraticCurveTo(385, 280, 385, 293);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(390, 243, 10, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.lineWidth = 20;
-        ctx.beginPath();
-        ctx.moveTo(376, 223);
-        ctx.quadraticCurveTo(392, 217, 402, 207);
-        ctx.stroke();
-
-        const pngDataUrl = canvas.toDataURL('image/png');
-        const appleLink = document.getElementById('apple-touch-icon-link');
-        const favLink = document.getElementById('favicon-link');
-        if (appleLink) appleLink.href = pngDataUrl;
-        if (favLink) favLink.href = pngDataUrl;
+        const savedLogo = localStorage.getItem('mimi_pos_custom_logo');
+        if (savedLogo) {
+          const appleLink = document.getElementById('apple-touch-icon-link');
+          const favLink = document.getElementById('favicon-link');
+          if (appleLink) appleLink.href = savedLogo;
+          if (favLink) favLink.href = savedLogo;
+        }
       } catch (e) {}
     })();
   </script>
@@ -265,24 +188,29 @@
     <!-- HEADER & TOP KPI DASHBOARD -->
     <header class="glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-6 mb-5">
       <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-        <!-- Brand & Status -->
+        <!-- Brand & Status (Bấm vào ô Logo để tải ảnh logo quán lên) -->
         <div class="flex items-center gap-3.5 shrink-0">
-          <div class="w-14 h-12 sm:w-16 sm:h-14 rounded-2xl bg-white border border-slate-200/90 dark:border-slate-700 flex items-center justify-center shadow-md shrink-0 overflow-hidden p-1">
-            <!-- Logo mìmí chuẩn theo bộ nhận diện của quán -->
-            <svg class="w-full h-full" viewBox="85 180 345 145" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M116 238 Q123 250 121 294" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M122 260 C132 232 162 232 164 262 Q165 280 163 295" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M164 264 C176 238 208 238 207 266 Q206 282 204 294" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M240 264 Q237 280 237 293" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round"/>
-              <circle cx="242" cy="241" r="11" fill="#0E3F8F"/>
-              <path d="M232 206 Q244 216 258 222" stroke="#0E3F8F" stroke-width="20" stroke-linecap="round"/>
-              <path d="M278 238 C298 230 309 252 305 294" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M306 266 C320 235 353 236 355 268 Q356 282 357 290" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M388 264 Q385 280 385 293" stroke="#0E3F8F" stroke-width="24" stroke-linecap="round"/>
-              <circle cx="390" cy="243" r="11" fill="#0E3F8F"/>
-              <path d="M376 223 Q392 217 402 207" stroke="#0E3F8F" stroke-width="20" stroke-linecap="round"/>
-            </svg>
-          </div>
+          <label
+            for="logo-upload-input"
+            class="group relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-slate-200/90 dark:border-slate-700 flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer transition hover:ring-2 hover:ring-cobalt-600"
+            title="Bấm vào đây để tải ảnh Logo quán (Tự động cập nhật làm Icon App điện thoại)"
+          >
+            <img
+              id="brand-logo-img"
+              src=""
+              alt="Logo Mì Mí"
+              class="w-full h-full object-contain hidden"
+            />
+            <div id="brand-logo-placeholder" class="flex flex-col items-center justify-center text-cobalt-700 leading-none select-none">
+              <span class="font-serif italic font-bold text-base sm:text-lg">mìmí</span>
+              <span class="text-[9px] text-slate-400 font-semibold mt-1">+ Tải logo</span>
+            </div>
+            <div class="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center text-white text-[10px] font-bold">
+              <i data-lucide="camera" class="w-4 h-4 mb-0.5"></i>
+              <span>Đổi Logo</span>
+            </div>
+            <input type="file" id="logo-upload-input" accept="image/*" class="hidden" />
+          </label>
 
           <div>
             <div class="flex items-center gap-2 flex-wrap">
@@ -1007,13 +935,18 @@
         class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full glass-panel border border-white/80 dark:border-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-cobalt-600 transition"
       >
         <i data-lucide="image" class="w-3.5 h-3.5"></i>
-        <span>Tùy chỉnh hình nền</span>
+        <span>Tùy chỉnh Logo & Hình nền</span>
       </button>
 
       <div id="bg-customizer-panel" class="hidden glass-panel rounded-2xl border border-white/80 dark:border-slate-800 p-3 flex flex-wrap items-center justify-center gap-3 shadow-sm">
-        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cobalt-600 hover:bg-cobalt-700 text-white text-[11px] font-bold cursor-pointer transition">
+        <label for="logo-upload-input" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cobalt-600 hover:bg-cobalt-700 text-white text-[11px] font-bold cursor-pointer transition">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span>Đổi Logo App</span>
+        </label>
+
+        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white text-[11px] font-bold cursor-pointer transition">
           <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-          <span>Tải ảnh lên</span>
+          <span>Tải ảnh nền</span>
           <input type="file" id="bg-upload-input" accept="image/*" class="hidden" />
         </label>
 
@@ -1024,7 +957,7 @@
         </div>
 
         <button type="button" id="btn-reset-bg" class="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-[11px] font-semibold text-slate-500 hover:text-rose-600 transition">
-          Mặc định
+          Xóa nền
         </button>
       </div>
     </footer>
@@ -1776,6 +1709,15 @@
           saveLocalFallback();
           updateShiftUI();
           renderShiftScheduleTable();
+        }
+      }, () => {});
+
+      // 3b. Đồng bộ Logo quán & Icon App điện thoại giữa tất cả các máy
+      onSnapshot(doc(db, 'mimi_settings', 'branding'), (snap) => {
+        if (snap.exists() && snap.data().logoDataUrl) {
+          const cloudLogo = snap.data().logoDataUrl;
+          try { localStorage.setItem('mimi_pos_custom_logo', cloudLogo); } catch (e) {}
+          applyBrandLogo(cloudLogo);
         }
       }, () => {});
 
@@ -2907,6 +2849,62 @@
       }
     }
 
+    // Hiển thị Logo trên Header và gắn vào thẻ apple-touch-icon cho iPhone
+    function applyBrandLogo(dataUrl) {
+      const logoImg = document.getElementById('brand-logo-img');
+      const placeholder = document.getElementById('brand-logo-placeholder');
+      const appleLink = document.getElementById('apple-touch-icon-link');
+      const favLink = document.getElementById('favicon-link');
+
+      if (dataUrl) {
+        if (logoImg) {
+          logoImg.src = dataUrl;
+          logoImg.classList.remove('hidden');
+        }
+        if (placeholder) placeholder.classList.add('hidden');
+        if (appleLink) appleLink.href = dataUrl;
+        if (favLink) favLink.href = dataUrl;
+      } else {
+        if (logoImg) {
+          logoImg.src = '';
+          logoImg.classList.add('hidden');
+        }
+        if (placeholder) placeholder.classList.remove('hidden');
+      }
+    }
+
+    // Chuẩn hóa ảnh Logo về khung vuông 512x512 nền trắng chuẩn iOS App Icon
+    function processLogoImageForAppIcon(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const size = 512;
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+
+          // Lót nền trắng chuẩn để khi thêm ra màn hình chính iPhone không bị nền đen
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, size, size);
+
+          // Căn giữa ảnh đúng tỉ lệ (object-contain)
+          const scale = Math.min(size / img.width, size / img.height);
+          const drawW = Math.round(img.width * scale);
+          const drawH = Math.round(img.height * scale);
+          const offsetX = Math.round((size - drawW) / 2);
+          const offsetY = Math.round((size - drawH) / 2);
+
+          ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+          const squarePngUrl = canvas.toDataURL('image/png');
+          callback(squarePngUrl);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     // Nén ảnh nền tự động trước khi lưu để không bị tràn bộ nhớ trình duyệt
     function compressBackgroundImage(file, callback) {
       const reader = new FileReader();
@@ -3077,6 +3075,30 @@
         blurValText.textContent = `${currentBgBlur}px`;
       }
       applyCustomBackground(currentBgUrl, currentBgBlur);
+
+      // Khởi tạo và xử lý sự kiện tải ảnh Logo quán lên
+      const savedLogoUrl = localStorage.getItem('mimi_pos_custom_logo') || '';
+      if (savedLogoUrl) {
+        applyBrandLogo(savedLogoUrl);
+      }
+
+      document.getElementById('logo-upload-input')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        processLogoImageForAppIcon(file, async (squarePngUrl) => {
+          try { localStorage.setItem('mimi_pos_custom_logo', squarePngUrl); } catch (err) {}
+          applyBrandLogo(squarePngUrl);
+          if (db) {
+            try {
+              await setDoc(doc(db, 'mimi_settings', 'branding'), {
+                logoDataUrl: squarePngUrl,
+                updatedAt: Date.now()
+              });
+            } catch (err) {}
+          }
+          showToast('Đã cập nhật Logo quán & Icon App điện thoại!');
+        });
+      });
 
       document.getElementById('btn-toggle-bg-customizer')?.addEventListener('click', () => {
         document.getElementById('bg-customizer-panel')?.classList.toggle('hidden');
