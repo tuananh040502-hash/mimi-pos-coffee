@@ -129,12 +129,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Sử dụng CDN tốc độ cao + defer để không chặn hiển thị màn hình chờ trên iPhone -->
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Tone.js (Âm thanh máy thu tiền Ka-ching) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 
   <style>
     :root,
@@ -275,6 +275,32 @@
       <span id="splash-status-label">Đang khởi tạo ứng dụng...</span>
       <span id="splash-percent-label" style="color:#1d4ed8;" class="dark:!text-blue-400">12%</span>
     </div>
+
+    <!-- Chi tiết 3 bước đồng bộ trên màn hình chờ điện thoại -->
+    <div style="width:240px;margin-top:14px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,0.75);border:1px solid rgba(226,232,240,0.9);font-size:11px;font-weight:600;color:#64748b;display:flex;flex-direction:column;gap:6px;" class="dark:!bg-slate-800/80 dark:!border-slate-700 dark:!text-slate-300">
+      <div id="splash-step-menu" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>1. Danh mục Menu quán</span>
+        <span class="step-dot" style="color:#94a3b8;">Đang tải...</span>
+      </div>
+      <div id="splash-step-shifts" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>2. Lịch phân ca nhân viên</span>
+        <span class="step-dot" style="color:#94a3b8;">Đang tải...</span>
+      </div>
+      <div id="splash-step-orders" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>3. Doanh thu & Đơn hàng</span>
+        <span class="step-dot" style="color:#94a3b8;">Đang tải...</span>
+      </div>
+    </div>
+
+    <!-- Nút dự phòng chỉ hiện khi mạng di động mất kết nối quá 10 giây -->
+    <button
+      id="splash-force-enter-btn"
+      type="button"
+      onclick="window.__forceCloseSplash && window.__forceCloseSplash()"
+      style="display:none;margin-top:14px;padding:8px 16px;border-radius:12px;background:#e2e8f0;color:#334155;font-size:11px;font-weight:700;border:none;cursor:pointer;"
+    >
+      Mạng chậm • Bấm để vào bằng dữ liệu đã lưu
+    </button>
   </div>
 
   <!-- Khởi chạy tức thì Logo & Thanh tiến trình trên điện thoại ngay khi mở App -->
@@ -1446,7 +1472,17 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import {
+      getFirestore,
+      initializeFirestore,
+      persistentLocalCache,
+      persistentMultipleTabManager,
+      doc,
+      setDoc,
+      deleteDoc,
+      onSnapshot,
+      collection
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAZOQY1DgLxi0EYQi07G_sbxE_UuSqs5R8",
@@ -1457,10 +1493,30 @@
       appId: "1:280571876047:web:a1ec9f8b249156b5bf5dba"
     };
 
+    // Hàm bọc an toàn cho Lucide Icons khi tải bất đồng bộ
+    function safeCreateIcons() {
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      } catch (e) {}
+    }
+
     let db = null;
     try {
       const app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
+      // Tối ưu đặc biệt cho iPhone (iOS Safari / Home Screen App):
+      // Bật AutoDetectLongPolling chống nghẽn mạng di động + Bộ nhớ đệm IndexedDB siêu tốc
+      try {
+        db = initializeFirestore(app, {
+          experimentalAutoDetectLongPolling: true,
+          localCache: persistentLocalCache({
+            tabManager: persistentMultipleTabManager()
+          })
+        });
+      } catch (innerErr) {
+        db = getFirestore(app);
+      }
     } catch (e) {
       console.warn("Sử dụng chế độ lưu trên máy:", e);
     }
@@ -1593,6 +1649,17 @@
     let splashCompleted = false;
     let syncFlags = { menu: false, orders: false, shifts: false };
 
+    function markSplashStepDone(stepId) {
+      const row = document.getElementById(stepId);
+      if (!row) return;
+      const dot = row.querySelector('.step-dot');
+      if (dot) {
+        dot.textContent = '✓ Hoàn tất';
+        dot.style.color = '#10b981';
+        dot.style.fontWeight = '800';
+      }
+    }
+
     function updateMobileSplash(targetPct, statusText) {
       if (splashCompleted) return;
       splashProgressVal = Math.max(splashProgressVal, Math.min(100, targetPct));
@@ -1613,26 +1680,35 @@
       const splash = document.getElementById('mobile-splash-screen');
       if (fill) fill.style.width = '100%';
       if (pct) pct.textContent = '100%';
-      if (lbl) lbl.textContent = 'Đã trực tuyến! Sẵn sàng bán hàng ✨';
+      if (lbl) lbl.textContent = 'Đã đồng bộ doanh thu! Sẵn sàng ✨';
 
       setTimeout(() => {
         if (splash) {
           splash.classList.add('splash-hidden');
           setTimeout(() => {
             splash.style.display = 'none';
-          }, 460);
+          }, 420);
         }
-      }, 280);
+      }, 180);
     }
+
+    window.__forceCloseSplash = () => {
+      completeMobileSplash();
+    };
 
     function checkAllSyncedForMobileSplash() {
       if (splashCompleted) return;
+      if (syncFlags.menu) markSplashStepDone('splash-step-menu');
+      if (syncFlags.shifts) markSplashStepDone('splash-step-shifts');
+      if (syncFlags.orders) markSplashStepDone('splash-step-orders');
+
       const doneCount = [syncFlags.menu, syncFlags.orders, syncFlags.shifts].filter(Boolean).length;
       if (doneCount === 1) {
-        updateMobileSplash(62, 'Đang tải Menu & Lịch ca làm...');
+        updateMobileSplash(58, 'Đang tải dữ liệu đám mây (1/3)...');
       } else if (doneCount === 2) {
-        updateMobileSplash(86, 'Đang đồng bộ doanh thu & đơn hàng...');
-      } else if (doneCount >= 3) {
+        updateMobileSplash(85, 'Đang tính toán tổng doanh thu (2/3)...');
+      } else if (syncFlags.menu && syncFlags.orders && syncFlags.shifts) {
+        // Chỉ khi CẢ 3 (Menu, Ca làm và Đơn hàng/Doanh thu) đã tải xong và vẽ lên giao diện mới mở màn hình
         completeMobileSplash();
       }
     }
@@ -2089,19 +2165,40 @@
 
     async function initRealtimePOS() {
       const statusText = document.getElementById('cloud-status-text');
+
+      // Nạp ngay dữ liệu đã lưu trong bộ nhớ máy trước để giao diện có sẵn số liệu tức thì
+      try {
+        const cachedMenu = localStorage.getItem('mimi_pos_menu');
+        if (cachedMenu) menuItems = JSON.parse(cachedMenu);
+        const cachedOrders = localStorage.getItem('mimi_pos_orders');
+        if (cachedOrders) orders = JSON.parse(cachedOrders);
+        const cachedShifts = localStorage.getItem('mimi_pos_shifts');
+        if (cachedShifts) weeklyShifts = JSON.parse(cachedShifts);
+        const cachedActs = localStorage.getItem('mimi_pos_activities');
+        if (cachedActs) activityLogs = JSON.parse(cachedActs);
+        renderCategories();
+        renderMenuGrid();
+        updateShiftUI();
+        renderDashboardAndHistory();
+        renderPeriodRevenueBars();
+        renderShiftScheduleTable();
+      } catch (e) {}
+
       if (!db) {
         statusText.textContent = 'Lưu trên máy';
-        loadLocalFallback();
         completeMobileSplash();
         return;
       }
 
-      updateMobileSplash(45, 'Đang đồng bộ dữ liệu trực tuyến...');
+      updateMobileSplash(40, 'Đang kết nối máy chủ Firebase...');
 
-      // Phòng hờ mạng yếu quá 4.5 giây vẫn cho vào trang mượt mà
+      // Không tự ý đóng màn hình chờ sớm nữa; chỉ hiện nút dự phòng nếu mạng bị đứt quá 9 giây
       setTimeout(() => {
-        if (!splashCompleted) completeMobileSplash();
-      }, 4500);
+        if (!splashCompleted) {
+          const forceBtn = document.getElementById('splash-force-enter-btn');
+          if (forceBtn) forceBtn.style.display = 'inline-block';
+        }
+      }, 9000);
 
       // 1. Đồng bộ Menu Mì Mí
       onSnapshot(collection(db, 'mimi_menu'), async (snap) => {
@@ -2111,20 +2208,22 @@
           }
         } else {
           menuItems = snap.docs.map(d => d.data());
+          saveLocalFallback();
           renderCategories();
           renderMenuGrid();
         }
         syncFlags.menu = true;
         checkAllSyncedForMobileSplash();
       }, () => {
-        loadLocalFallback();
-        completeMobileSplash();
+        syncFlags.menu = true;
+        checkAllSyncedForMobileSplash();
       });
 
-      // 2. Đồng bộ Đơn hàng & Doanh thu
+      // 2. Đồng bộ Đơn hàng & Doanh thu (Quan trọng nhất: Đợi tải và tính xong tiền mới mở màn hình)
       onSnapshot(collection(db, 'mimi_orders'), (snap) => {
         orders = snap.docs.map(d => d.data()).sort((a, b) => b.createdAt - a.createdAt);
         statusText.textContent = 'Trực tuyến';
+        saveLocalFallback();
         updateShiftUI();
         renderDashboardAndHistory();
         renderPeriodRevenueBars();
@@ -2132,8 +2231,8 @@
         checkAllSyncedForMobileSplash();
       }, () => {
         statusText.textContent = 'Lưu trên máy';
-        loadLocalFallback();
-        completeMobileSplash();
+        syncFlags.orders = true;
+        checkAllSyncedForMobileSplash();
       });
 
       // 3. Đồng bộ Lịch Ca Làm Việc Cả Tuần
@@ -4068,8 +4167,11 @@
       });
     }
 
-    window.addEventListener('load', async () => {
+    // Khởi chạy ngay lập tức khi cây HTML sẵn sàng (không đợi tải xong font/âm thanh) để tốc độ trên điện thoại ngang ngửa máy tính
+    function bootstrapApp() {
       initEvents();
+      // Kết nối và tải doanh thu từ Firebase NGAY LẬP TỨC
+      initRealtimePOS();
       fetchBaDinhWeather();
       updateUpcomingBirthdayUI();
       renderCategories();
@@ -4078,9 +4180,15 @@
       updateShiftUI();
       renderShiftScheduleTable();
       renderPeriodRevenueBars();
-      lucide.createIcons();
-      await initRealtimePOS();
-    });
+      safeCreateIcons();
+      window.addEventListener('load', () => safeCreateIcons());
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrapApp);
+    } else {
+      bootstrapApp();
+    }
   </script>
 </body>
 </html>
