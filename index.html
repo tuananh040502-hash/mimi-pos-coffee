@@ -415,7 +415,7 @@
 
             <!-- 3. Sổ Ghi Chú Thu / Chi (Tách biệt) -->
             <button id="btn-open-cashnote" type="button" class="h-10 inline-flex items-center justify-center gap-1.5 px-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/90 dark:bg-slate-800 hover:bg-cobalt-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold shadow-sm transition">
-              <i data-lucide="StickyNote" class="w-3.5 h-3.5 text-cobalt-600 dark:text-cobalt-200 shrink-0"></i>
+              <i data-lucide="sticky-note" class="w-3.5 h-3.5 text-cobalt-600 dark:text-cobalt-200 shrink-0"></i>
               <span class="truncate">Thu/Chi</span>
               <span id="cashnote-count-badge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-cobalt-100 dark:bg-slate-700 text-cobalt-700 dark:text-cobalt-200 font-extrabold">0</span>
             </button>
@@ -441,6 +441,12 @@
 
             <!-- 7. Cụm nút nhỏ: Chọn màu chủ đạo (Popover) + Đổi Ngày/Đêm -->
             <div class="col-span-2 sm:col-span-1 flex items-center gap-2 h-10">
+              <div class="relative flex-1 h-full">
+                <button
+                  id="btn-color-popover"
+                  type="button"
+                  class="w-full h-full flex items-center justify-center gap-1.5 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/90 dark:bg-slate-800 hover:bg-cobalt-50 dark:hover:bg-slate-700 shadow-sm transition"
+                  title="Chọn màu giao diện"
                 >
                   <span class="w-3.5 h-3.5 rounded-full bg-cobalt-600 ring-2 ring-offset-1 ring-cobalt-600/40 dark:ring-offset-slate-800"></span>
                   <i data-lucide="palette" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-300"></i>
@@ -2009,7 +2015,7 @@
         statusEl.textContent = `${condition} • Ẩm ${humidity}%`;
         if (iconBox) {
           iconBox.innerHTML = `<i data-lucide="${lucideIcon}" class="w-4 h-4"></i>`;
-          lucide.createIcons();
+          safeCreateIcons();
         }
       } catch (err) {
         statusEl.textContent = 'Mát mẻ • Hà Nội';
@@ -2142,7 +2148,7 @@
       }
 
       modal.classList.remove('hidden');
-      lucide.createIcons();
+      safeCreateIcons();
       if (playSound) {
         triggerShiftBellSound();
       }
@@ -2534,6 +2540,23 @@
         syncFlags.menu = true;
         checkAllSyncedForMobileSplash();
       });
+
+      // 2. Đồng bộ Đơn hàng & Doanh thu (mimi_orders)
+      onSnapshot(collection(db, 'mimi_orders'), (snap) => {
+        orders = snap.docs.map(d => d.data()).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        saveLocalFallback();
+        updateShiftUI();
+        renderDashboardAndHistory();
+        renderPeriodRevenueBars();
+        if (statusText) statusText.textContent = 'Trực tuyến';
+        syncFlags.orders = true;
+        checkAllSyncedForMobileSplash();
+      }, () => {
+        if (statusText) statusText.textContent = 'Lưu trên máy';
+        syncFlags.orders = true;
+        checkAllSyncedForMobileSplash();
+      });
+
       // 3. Đồng bộ Lịch Ca Làm Việc Cả Tuần & Hồ Sơ Nhân Viên
       onSnapshot(doc(db, 'mimi_settings', 'weekly_shifts'), (snap) => {
         if (snap.exists()) {
@@ -3379,7 +3402,7 @@
         document.getElementById('cart-count').textContent = '0';
         document.getElementById('cart-total-price').textContent = '0đ';
         document.getElementById('discount-summary-row').classList.add('hidden');
-        lucide.createIcons();
+        safeCreateIcons();
         return;
       }
 
@@ -3590,7 +3613,7 @@
         tbody.innerHTML = '';
         emptyEl.classList.remove('hidden');
         if (paginationEl) paginationEl.classList.add('hidden');
-        lucide.createIcons();
+        safeCreateIcons();
         return;
       }
 
@@ -3707,7 +3730,7 @@
         });
       });
 
-      lucide.createIcons();
+      safeCreateIcons();
     }
 
     function setEditOrderPaymentMethodUI(method) {
@@ -3756,7 +3779,7 @@
 
       renderEditingOrderItems();
       document.getElementById('edit-order-modal').classList.remove('hidden');
-      lucide.createIcons();
+      safeCreateIcons();
     }
 
     function renderEditingOrderItems() {
@@ -4071,7 +4094,7 @@
         });
       });
 
-      lucide.createIcons();
+      safeCreateIcons();
     }
 
     function initEvents() {
@@ -4132,6 +4155,120 @@
         fetchBaDinhWeather();
         showToast('Đã cập nhật thời tiết Ba Đình, Hà Nội!');
       });
+
+      // 2. Bấm vào huy hiệu Ca để xem thông báo giao ca & đổi câu chúc
+      document.getElementById('active-shift-badge')?.addEventListener('click', () => {
+        openShiftGreetingModal(detectCurrentShiftCode(), false);
+      });
+      document.getElementById('btn-close-shift-modal')?.addEventListener('click', () => {
+        document.getElementById('shift-greeting-modal')?.classList.add('hidden');
+      });
+      document.getElementById('shift-greeting-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'shift-greeting-modal') {
+          document.getElementById('shift-greeting-modal')?.classList.add('hidden');
+        }
+      });
+      document.getElementById('btn-shuffle-shift-quote')?.addEventListener('click', () => {
+        const quoteEl = document.getElementById('shift-modal-quote');
+        if (quoteEl) {
+          quoteEl.textContent = `"${pickShiftQuote(activeShiftModalType, true)}"`;
+        }
+      });
+
+      // 3. Mở / Thu gọn biểu đồ phân tích doanh thu & chọn mức Tuần / Tháng / Năm
+      document.getElementById('btn-toggle-period-bars')?.addEventListener('click', () => {
+        const wrapper = document.getElementById('period-revenue-wrapper');
+        const txt = document.getElementById('period-toggle-text');
+        if (!wrapper) return;
+        const isHidden = wrapper.classList.toggle('hidden');
+        if (txt) txt.textContent = isHidden ? 'Xem biểu đồ' : 'Thu gọn biểu đồ';
+        if (!isHidden) {
+          renderPeriodRevenueBars();
+        }
+      });
+
+      document.querySelectorAll('.rev-mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          revenueChartMode = btn.getAttribute('data-rev-mode') || 'week';
+          document.querySelectorAll('.rev-mode-btn').forEach(b => {
+            b.className = 'rev-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600';
+          });
+          btn.className = 'rev-mode-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-cobalt-600 text-white shadow-sm';
+          renderRevenueColumnChart();
+        });
+      });
+
+      document.querySelectorAll('.drink-mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          drinkChartMode = btn.getAttribute('data-drink-mode') || 'week';
+          document.querySelectorAll('.drink-mode-btn').forEach(b => {
+            b.className = 'drink-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600';
+          });
+          btn.className = 'drink-mode-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-cobalt-600 text-white shadow-sm';
+          renderBestSellingDrinksChart();
+        });
+      });
+
+      // 4. Tùy chỉnh Logo App & Hình nền mờ (Apple Wallpaper Blur)
+      try {
+        const savedLogo = localStorage.getItem('mimi_pos_custom_logo');
+        if (savedLogo) applyBrandLogo(savedLogo);
+
+        const savedBg = localStorage.getItem('mimi_pos_custom_bg');
+        const savedBlur = Number(localStorage.getItem('mimi_pos_custom_blur') ?? 16);
+        const blurSlider = document.getElementById('bg-blur-slider');
+        const blurValEl = document.getElementById('bg-blur-value');
+        if (blurSlider) blurSlider.value = savedBlur;
+        if (blurValEl) blurValEl.textContent = `${savedBlur}px`;
+        if (savedBg) applyCustomBackground(savedBg, savedBlur);
+      } catch (e) {}
+
+      document.getElementById('btn-toggle-bg-customizer')?.addEventListener('click', () => {
+        document.getElementById('bg-customizer-panel')?.classList.toggle('hidden');
+      });
+
+      document.getElementById('logo-upload-input')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        processLogoImageForAppIcon(file, async (squarePngUrl) => {
+          try { localStorage.setItem('mimi_pos_custom_logo', squarePngUrl); } catch (err) {}
+          applyBrandLogo(squarePngUrl);
+          if (db) {
+            try { await setDoc(doc(db, 'mimi_settings', 'branding'), { logoDataUrl: squarePngUrl }); } catch (err) {}
+          }
+          showToast('Đã cập nhật Logo quán & Icon App điện thoại!');
+        });
+      });
+
+      document.getElementById('bg-upload-input')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        compressBackgroundImage(file, (compressedUrl) => {
+          const blurPx = Number(document.getElementById('bg-blur-slider')?.value || 16);
+          try {
+            localStorage.setItem('mimi_pos_custom_bg', compressedUrl);
+            localStorage.setItem('mimi_pos_custom_blur', String(blurPx));
+          } catch (err) {}
+          applyCustomBackground(compressedUrl, blurPx);
+          showToast('Đã cập nhật ảnh nền mới!');
+        });
+      });
+
+      document.getElementById('bg-blur-slider')?.addEventListener('input', (e) => {
+        const blurPx = Number(e.target.value || 16);
+        const blurValEl = document.getElementById('bg-blur-value');
+        if (blurValEl) blurValEl.textContent = `${blurPx}px`;
+        try { localStorage.setItem('mimi_pos_custom_blur', String(blurPx)); } catch (err) {}
+        const savedBg = localStorage.getItem('mimi_pos_custom_bg');
+        if (savedBg) applyCustomBackground(savedBg, blurPx);
+      });
+
+      document.getElementById('btn-reset-bg')?.addEventListener('click', () => {
+        try { localStorage.removeItem('mimi_pos_custom_bg'); } catch (err) {}
+        applyCustomBackground(null, 16);
+        showToast('Đã xóa ảnh nền tùy chỉnh!');
+      });
+
       // 6. Bảng Lịch Phân Ca Làm Việc Cả Tuần & Hồ sơ Nhân viên (20 Emoji con vật)
       const scheduleSec = document.getElementById('shift-schedule-section');
       document.getElementById('btn-toggle-schedule').addEventListener('click', () => {
@@ -4548,6 +4685,38 @@
               try { await setDoc(doc(db, 'mimi_orders', target.id), target); } catch (err) {}
             }
             await logActivity('edit', `Đã chỉnh sửa đơn ${target.orderCode || ''} (${target.customer} • ${formatVND(target.totalAmount)} - ${payText})`);
+
+            saveLocalFallback();
+            editOrderModal.classList.add('hidden');
+            renderDashboardAndHistory();
+            renderPeriodRevenueBars();
+            showToast(`Đã cập nhật đơn ${target.orderCode || ''}!`);
+          }
+        );
+      });
+
+      // Sự kiện cho Popup Xác nhận "Bạn đã chắc chắn chưa?"
+      document.getElementById('btn-confirm-no')?.addEventListener('click', closeConfirmModal);
+      document.getElementById('btn-confirm-yes')?.addEventListener('click', async () => {
+        const cb = pendingConfirmCallback;
+        closeConfirmModal();
+        if (typeof cb === 'function') {
+          await cb();
+        }
+      });
+
+      // Phân trang lịch sử đơn hàng (10 đơn / trang)
+      document.getElementById('btn-history-prev')?.addEventListener('click', () => {
+        if (historyCurrentPage > 1) {
+          historyCurrentPage -= 1;
+          renderDashboardAndHistory();
+        }
+      });
+      document.getElementById('btn-history-next')?.addEventListener('click', () => {
+        historyCurrentPage += 1;
+        renderDashboardAndHistory();
+      });
+
       // 14. Lọc lịch sử theo hình thức thanh toán & Thanh tìm kiếm đơn hàng
       const historySearchInp = document.getElementById('history-search-input');
       historySearchInp?.addEventListener('input', (e) => {
