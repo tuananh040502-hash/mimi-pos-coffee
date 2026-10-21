@@ -224,9 +224,14 @@
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span id="cloud-status-text">Đang đồng bộ...</span>
               </span>
-              <span id="active-shift-badge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-cobalt-100/80 dark:bg-slate-800 text-cobalt-800 dark:text-cobalt-200">
+              <button
+                type="button"
+                id="active-shift-badge"
+                title="Bấm để xem thông báo ca làm & lời chúc hôm nay"
+                class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-cobalt-100/80 dark:bg-slate-800 text-cobalt-800 dark:text-cobalt-200 hover:bg-cobalt-600 hover:text-white transition cursor-pointer"
+              >
                 Ca Sáng (8h-13h)
-              </span>
+              </button>
             </div>
             <p id="current-shift-staff-bar" class="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Trực ca: <strong class="text-slate-700 dark:text-slate-200">Đang tải...</strong>
@@ -992,6 +997,65 @@
     </div>
   </div>
 
+  <!-- POPUP CHÀO NGÀY MỚI (8H) & THÔNG BÁO ĐỔI CA (13H, 18H) -->
+  <div id="shift-greeting-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden">
+    <div class="glass-panel w-full max-w-md rounded-3xl border border-white/80 dark:border-slate-700 p-6 sm:p-7 shadow-2xl text-center relative overflow-hidden">
+      <div id="shift-modal-icon-box" class="w-16 h-16 rounded-3xl bg-cobalt-600 text-white flex items-center justify-center mx-auto shadow-lg">
+        <i data-lucide="sun" class="w-9 h-9"></i>
+      </div>
+
+      <span id="shift-modal-time-badge" class="inline-block mt-4 px-3.5 py-1 rounded-full text-xs font-extrabold bg-cobalt-50 dark:bg-slate-800 text-cobalt-700 dark:text-cobalt-200 border border-cobalt-200/70 dark:border-slate-700">
+        08:00 • Bắt đầu ngày mới
+      </span>
+
+      <h3 id="shift-modal-title" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-2.5">
+        Chào Ngày Mới Mì Mí!
+      </h3>
+
+      <!-- Câu chúc ngẫu nhiên -->
+      <div class="my-4 p-4 rounded-2xl bg-cobalt-50/70 dark:bg-slate-800/90 border border-cobalt-200/60 dark:border-slate-700 relative">
+        <p id="shift-modal-quote" class="text-xs sm:text-sm font-semibold italic text-slate-700 dark:text-slate-200 leading-relaxed">
+          "Chúc các bạn một ngày làm việc tràn đầy năng lượng!"
+        </p>
+        <button
+          type="button"
+          id="btn-shuffle-shift-quote"
+          class="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-cobalt-600 dark:text-cobalt-200 hover:underline"
+        >
+          <i data-lucide="sparkles" class="w-3 h-3"></i>
+          <span>Đổi câu chúc khác</span>
+        </button>
+      </div>
+
+      <!-- Thông tin ca trước & ca tiếp theo -->
+      <div class="text-left space-y-2.5 mb-5">
+        <div id="shift-modal-prev-box" class="hidden p-3 rounded-2xl bg-slate-100/85 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700">
+          <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Ca vừa hoàn thành</div>
+          <div id="shift-modal-prev-staff" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 mt-0.5">
+            Ca Sáng: Đang tải...
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 border-2 border-cobalt-600/80 shadow-sm">
+          <div id="shift-modal-next-label" class="text-[10px] font-extrabold uppercase tracking-wider text-cobalt-600 dark:text-cobalt-200">
+            Nhân viên trực ca sắp tới
+          </div>
+          <div id="shift-modal-next-staff" class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white mt-1">
+            Đang tải lịch phân ca...
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        id="btn-close-shift-modal"
+        class="w-full py-3 rounded-2xl bg-cobalt-600 hover:bg-cobalt-700 text-white font-extrabold text-xs sm:text-sm shadow-md transition"
+      >
+        Sẵn sàng vào ca! ✨
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL SỬA THÔNG TIN ĐƠN HÀNG TRONG LỊCH SỬ -->
   <div id="edit-order-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/55 backdrop-blur-sm hidden">
     <div class="glass-panel w-full max-w-lg rounded-3xl border border-white/80 dark:border-slate-700 p-6 shadow-2xl max-h-[90vh] flex flex-col">
@@ -1313,6 +1377,54 @@
       T: { code: 'T', name: 'Ca Tối', hours: '18h00 - 22h30', badge: 'Ca Tối (18h-22h30)' }
     };
 
+    // 20 Câu chào ngày mới lúc 8h00 sáng dành cho nhân viên Mì Mí
+    const MORNING_QUOTES = [
+      "Chào buổi sáng nhà Mì Mí! Chúc ca sáng hôm nay mở hàng suôn sẻ, khách ra vào tấp nập nhé! ☀️☕",
+      "Ngày mới bắt đầu rồi! Hãy pha những ly nước thật ngon và trao đi nụ cười thật tươi nha! ✨",
+      "Mỗi tách cà phê buổi sáng là một niềm vui nhỏ. Chúc team Ca Sáng làm việc thật vui và đầy năng lượng! 🌿",
+      "8h00 rồi! Chúc những gương mặt thân thương của Mì Mí có một ngày mới rực rỡ và bão đơn! 🚀",
+      "Năng lượng tích cực của các bạn chính là gia vị ngon nhất trong mỗi món nước tại Mì Mí. Chào ngày mới nhé! 💙",
+      "Chúc ca sáng hôm nay máy chạy êm, pha chế mượt, khách nào vào cũng khen tấm tắc! 🧋✨",
+      "Bầu trời hôm nay thật đẹp để bắt đầu một ca làm việc tuyệt vời. Cố lên nhé đồng đội Mì Mí! 🌤️",
+      "Cảm ơn bạn đã có mặt đúng giờ để đánh thức gian bếp nhỏ của Mì Mí. Chúc bạn một ca sáng thật chill! 🎶",
+      "Khởi đầu ngày mới với hương thơm Espresso nồng nàn! Chúc team sáng nay gặt hái thật nhiều niềm vui! ☕",
+      "Một nụ cười buổi sáng bằng mười thang thuốc bổ. Cùng nhau tạo nên một ngày làm việc thật đáng nhớ nhé! 😊",
+      "Chào ngày mới! Chúc các barista của Mì Mí hôm nay đánh kem siêu mịn, pha trà siêu thơm! 🍵",
+      "Hôm nay chắc chắn sẽ là một ngày tuyệt vời tại Mì Mí. Chúc ca sáng buôn may bán đắt! 🎉",
+      "Đừng quên uống một ngụm nước mát và hít một hơi thật sâu trước khi đón những vị khách đầu tiên nhé! 💧✨",
+      "Sự tỉ mỉ và tận tâm của các bạn mỗi sáng luôn làm Mì Mí trở nên ấm áp hơn bao giờ hết! 💙",
+      "Chào buổi sáng! Chúc team mở quán hôm nay mọi việc hanh thông, khách thương khách quý! 🌸",
+      "Mặt trời đã lên và quầy bar Mì Mí đã sẵn sàng tỏa sáng cùng các bạn. Chúc ca sáng tràn đầy hứng khởi! ☀️",
+      "Cảm ơn các bạn đã mang thanh xuân và nhiệt huyết đến với Mì Mí mỗi ngày. Chúc một ngày tốt lành! ✨",
+      "Từng ly Bạc xỉu, từng cốc Matcha sáng nay đều gửi gắm niềm vui của các bạn. Chúc ca sáng đại thắng! 🥂",
+      "Chào 8h sáng! Cùng bật một bản nhạc thật hay và bắt đầu ngày mới thật sảng khoái nhé team ơi! 🎵",
+      "Chúc các chiến binh Ca Sáng của Mì Mí một ngày làm việc nhẹ nhàng, vui vẻ và ngập tràn tiếng cười! 🌟"
+    ];
+
+    // 20 Câu thông báo giao ca & cảm ơn nhân viên lúc 13h00 và 18h00
+    const HANDOVER_QUOTES = [
+      "Đến giờ đổi ca rồi! Cảm ơn các bạn ca trước đã vất vả, chúc các bạn ca sau tiếp lửa thật rực rỡ nhé! 🤝✨",
+      "Ting ting! Khép lại một ca làm việc chăm chỉ, cảm ơn team vừa rồi rất nhiều. Mời team ca mới nhận quầy nha! 🔔",
+      "Các bạn ca trước đã làm rất tốt rồi, giờ là lúc nghỉ ngơi thôi! Chúc ca tiếp theo bùng nổ doanh số nhé! 🚀",
+      "Cảm ơn những đôi bàn tay khéo léo vừa hoàn thành ca trực. Chúc các bạn mới vào ca luôn tràn đầy năng lượng! 💙",
+      "Giao ca suôn sẻ, quầy kệ gọn gàng! Cảm ơn sự tận tâm của ca trước và chào mừng ca mới nhập cuộc! 🌟",
+      "Một ca làm việc nữa lại khép lại thật trọn vẹn. Cảm ơn các bạn rất nhiều vì đã luôn hết mình cùng Mì Mí! ☕",
+      "Đến giờ bàn giao ca rồi! Đừng quên kiểm tra lại quầy và gửi một cái đập tay tiếp sức cho đồng đội ca sau nhé! 🙌",
+      "Cảm ơn ca trước đã giữ cho gian quán luôn ấm cúng. Chúc team ca tiếp theo có những giờ làm việc thật vui! 🎶",
+      "Hết ca rồi, về nghỉ ngơi và nạp lại năng lượng thôi! Mọi việc ở quán cứ để đồng đội ca sau lo nhé! 💪",
+      "Sự phối hợp ăn ý giữa các ca chính là sức mạnh của Mì Mí. Cảm ơn ca trước và chúc ca sau thật thuận lợi! 🌿",
+      "Đã điểm giờ giao ca! Cảm ơn những giọt mồ hôi và nụ cười của ca vừa qua, chúc ca mới khách đông nườm nượp! 🧋",
+      "Bàn giao công việc thật chu đáo nhé các bạn ơi! Cảm ơn team ca trước và tiếp thêm thật nhiều may mắn cho ca sau! 🍀",
+      "Mỗi ca làm đi qua đều đóng góp một phần tuyệt vời cho Mì Mí. Cảm ơn các bạn rất nhiều! 💙✨",
+      "Giờ đổi ca đã điểm! Chúc các bạn vừa tan ca có khoảng thời gian nghỉ ngơi thật thoải mái bên gia đình và bạn bè! 🌸",
+      "Chào mừng các bạn ca mới! Hãy tiếp nối nguồn năng lượng tích cực từ ca trước để phục vụ khách thật chu đáo nhé! 😊",
+      "Cảm ơn team ca trước đã hoàn thành xuất sắc nhiệm vụ hôm nay. Chúc team ca sau giữ vững phong độ nhé! 🏆",
+      "Đổi ca thôi nào! Cảm ơn sự cố gắng không ngừng nghỉ của từng thành viên trong đại gia đình Mì Mí! 🎉",
+      "Quầy bar đã sẵn sàng chuyển giao! Chúc người về nghỉ ngơi vui vẻ, người vào ca mới làm việc hăng say! ☀️🌙",
+      "Cảm ơn các bạn vì một ca làm việc đầy trách nhiệm. Chúc ca tiếp theo lên đơn đều tay, niềm vui ngập tràn! ✨",
+      "Đồng hồ đã điểm giờ giao ca! Chúc cho sự kết nối giữa các ca của Mì Mí luôn gắn kết, nhịp nhàng và ấm áp! 🤝💙"
+    ];
+
     // Danh sách thành viên mặc định đồng bộ từ trang Sinh Nhật Friends & Mimi
     const FALLBACK_BIRTHDAY_MEMBERS = [
       { id: '1', name: 'Chị Mee', day: 22, month: 7 },
@@ -1436,6 +1548,134 @@
 
     let currentOrderShift = detectCurrentShiftCode();
     let scheduleWeekOffset = 0;
+    let activeShiftModalType = 'S';
+
+    // Chọn câu chúc ngẫu nhiên theo ngày & ca (hoặc đổi ngẫu nhiên khi bấm nút)
+    function pickShiftQuote(type, forceRandom = false) {
+      const list = type === 'S' ? MORNING_QUOTES : HANDOVER_QUOTES;
+      if (forceRandom) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+      const todayKey = getTodayStr() + '_' + type;
+      const savedQuoteIdx = localStorage.getItem('mimi_quote_idx_' + todayKey);
+      if (savedQuoteIdx !== null && list[Number(savedQuoteIdx)]) {
+        return list[Number(savedQuoteIdx)];
+      }
+      const randomIdx = Math.floor(Math.random() * list.length);
+      try {
+        localStorage.setItem('mimi_quote_idx_' + todayKey, String(randomIdx));
+      } catch (e) {}
+      return list[randomIdx];
+    }
+
+    // Phát âm thanh chuông báo giao ca / chào ngày mới nhẹ nhàng
+    async function triggerShiftBellSound() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 55,
+          spread: 65,
+          origin: { y: 0.6 },
+          zIndex: 100
+        });
+      }
+      try {
+        if (typeof Tone !== 'undefined') {
+          await Tone.start();
+          const synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: 'sine' },
+            envelope: { attack: 0.01, decay: 0.25, sustain: 0.15, release: 0.8 }
+          }).toDestination();
+          synth.volume.value = -6;
+          const now = Tone.now();
+          synth.triggerAttackRelease('E5', '8n', now);
+          synth.triggerAttackRelease('G#5', '8n', now + 0.14);
+          synth.triggerAttackRelease('B5', '4n', now + 0.28);
+        }
+      } catch (e) {}
+    }
+
+    // Mở Popup Chào ngày mới (S: 8h) hoặc Giao ca (C: 13h, T: 18h)
+    function openShiftGreetingModal(shiftType, playSound = true) {
+      activeShiftModalType = shiftType || detectCurrentShiftCode();
+      const todayStr = getTodayStr();
+      const modal = document.getElementById('shift-greeting-modal');
+      if (!modal) return;
+
+      const iconBox = document.getElementById('shift-modal-icon-box');
+      const timeBadge = document.getElementById('shift-modal-time-badge');
+      const titleEl = document.getElementById('shift-modal-title');
+      const quoteEl = document.getElementById('shift-modal-quote');
+      const prevBox = document.getElementById('shift-modal-prev-box');
+      const prevStaffEl = document.getElementById('shift-modal-prev-staff');
+      const nextLabelEl = document.getElementById('shift-modal-next-label');
+      const nextStaffEl = document.getElementById('shift-modal-next-staff');
+
+      const sList = weeklyShifts[`${todayStr}_S`] || [];
+      const cList = weeklyShifts[`${todayStr}_C`] || [];
+      const tList = weeklyShifts[`${todayStr}_T`] || [];
+
+      const formatStaffNames = (arr) =>
+        arr.length > 0 ? arr.join(', ') : 'Chưa xếp lịch trực ca này';
+
+      quoteEl.textContent = `"${pickShiftQuote(activeShiftModalType, false)}"`;
+
+      if (activeShiftModalType === 'S') {
+        iconBox.innerHTML = `<i data-lucide="sunrise" class="w-9 h-9"></i>`;
+        timeBadge.textContent = '08:00 • Khởi động Ca Sáng (8h00 - 13h00)';
+        titleEl.textContent = 'Chào Ngày Mới Mì Mí! ☀️';
+        prevBox.classList.add('hidden');
+        nextLabelEl.textContent = 'Nhân viên trực Ca Sáng hôm nay (8h00 - 13h00)';
+        nextStaffEl.textContent = formatStaffNames(sList);
+      } else if (activeShiftModalType === 'C') {
+        iconBox.innerHTML = `<i data-lucide="refresh-cw" class="w-8 h-8"></i>`;
+        timeBadge.textContent = '13:00 • Đến giờ đổi sang Ca Chiều (13h00 - 18h00)';
+        titleEl.textContent = 'Thông Báo Giao Ca Chiều! 🤝';
+        prevBox.classList.remove('hidden');
+        prevStaffEl.innerHTML = `Cảm ơn Ca Sáng (8h-13h): <strong class="text-cobalt-700 dark:text-cobalt-200">${formatStaffNames(sList)}</strong>`;
+        nextLabelEl.textContent = 'Nhân viên vào Ca Chiều sắp tới (13h00 - 18h00)';
+        nextStaffEl.textContent = formatStaffNames(cList);
+      } else {
+        iconBox.innerHTML = `<i data-lucide="moon-star" class="w-8 h-8"></i>`;
+        timeBadge.textContent = '18:00 • Đến giờ đổi sang Ca Tối (18h00 - 22h30)';
+        titleEl.textContent = 'Thông Báo Giao Ca Tối! 🌙';
+        prevBox.classList.remove('hidden');
+        prevStaffEl.innerHTML = `Cảm ơn Ca Chiều (13h-18h): <strong class="text-cobalt-700 dark:text-cobalt-200">${formatStaffNames(cList)}</strong>`;
+        nextLabelEl.textContent = 'Nhân viên vào Ca Tối sắp tới (18h00 - 22h30)';
+        nextStaffEl.textContent = formatStaffNames(tList);
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+      if (playSound) {
+        triggerShiftBellSound();
+      }
+    }
+
+    // Kiểm tra tự động theo giờ thực tế (8h00, 13h00, 18h00)
+    function checkAutoShiftNotification() {
+      const now = new Date();
+      const h = now.getHours();
+      const todayStr = formatDateObj(now);
+
+      let targetShift = null;
+      if (h >= 8 && h < 13) {
+        targetShift = 'S'; // 8h00 bắt đầu ngày mới
+      } else if (h >= 13 && h < 18) {
+        targetShift = 'C'; // 13h00 giao ca chiều
+      } else if (h >= 18 && h < 23) {
+        targetShift = 'T'; // 18h00 giao ca tối
+      }
+
+      if (!targetShift) return;
+
+      const notifiedKey = `mimi_shift_notified_${todayStr}_${targetShift}`;
+      if (!localStorage.getItem(notifiedKey)) {
+        try {
+          localStorage.setItem(notifiedKey, '1');
+        } catch (e) {}
+        openShiftGreetingModal(targetShift, true);
+      }
+    }
 
     setInterval(() => {
       const autoShift = detectCurrentShiftCode();
@@ -1443,7 +1683,8 @@
         currentOrderShift = autoShift;
         updateShiftUI();
       }
-    }, 30000);
+      checkAutoShiftNotification();
+    }, 15000);
 
     function formatVND(amount) {
       return Number(amount || 0).toLocaleString('vi-VN') + 'đ';
@@ -1710,7 +1951,10 @@
           updateShiftUI();
           renderShiftScheduleTable();
         }
-      }, () => {});
+        checkAutoShiftNotification();
+      }, () => {
+        checkAutoShiftNotification();
+      });
 
       // 3b. Đồng bộ Logo quán & Icon App điện thoại giữa tất cả các máy
       onSnapshot(doc(db, 'mimi_settings', 'branding'), (snap) => {
@@ -1762,6 +2006,7 @@
       renderDashboardAndHistory();
       renderPeriodRevenueBars();
       renderShiftScheduleTable();
+      checkAutoShiftNotification();
     }
 
     function saveLocalFallback() {
@@ -3051,6 +3296,26 @@
       document.getElementById('weather-badinh-btn')?.addEventListener('click', () => {
         fetchBaDinhWeather();
         showToast('Đã cập nhật thời tiết Ba Đình, Hà Nội!');
+      });
+
+      // 1c. Bấm vào huy hiệu Ca làm việc trên Header để xem lại lời chúc & lịch giao ca bất cứ lúc nào
+      document.getElementById('active-shift-badge')?.addEventListener('click', () => {
+        openShiftGreetingModal(detectCurrentShiftCode(), true);
+      });
+
+      document.getElementById('btn-shuffle-shift-quote')?.addEventListener('click', () => {
+        const quoteEl = document.getElementById('shift-modal-quote');
+        if (quoteEl) {
+          quoteEl.textContent = `"${pickShiftQuote(activeShiftModalType, true)}"`;
+        }
+      });
+
+      const shiftGreetingModal = document.getElementById('shift-greeting-modal');
+      document.getElementById('btn-close-shift-modal')?.addEventListener('click', () => {
+        shiftGreetingModal?.classList.add('hidden');
+      });
+      shiftGreetingModal?.addEventListener('click', (e) => {
+        if (e.target.id === 'shift-greeting-modal') shiftGreetingModal.classList.add('hidden');
       });
 
       // 2. Chuyển trang lịch sử (10 đơn / trang)
