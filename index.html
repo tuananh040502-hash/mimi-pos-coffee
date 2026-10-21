@@ -201,11 +201,12 @@
           </div>
         </div>
 
-        <!-- Controls: Theme Color, Date Filter, Shift Schedule, Activity Log, Menu Edit, Export, Dark Mode & Birthday Link -->
-        <div class="flex flex-col xl:items-end gap-2">
-          <div class="flex items-center flex-wrap gap-2">
+        <!-- Controls: Balanced 2-Row Layout (Row 1: Actions | Row 2: Ba Dinh Weather + Upcoming Birthday) -->
+        <div class="flex flex-col gap-2 w-full xl:w-auto">
+          <!-- Hàng 1: Các nút công cụ quản lý chính -->
+          <div class="flex items-center flex-wrap xl:justify-end gap-2">
             <!-- Chọn màu chủ đạo -->
-            <div class="flex items-center gap-1.5 bg-white/80 dark:bg-slate-800/90 px-2.5 py-1.5 rounded-xl border border-slate-200/80 dark:border-slate-700" title="Đổi màu chủ đạo">
+            <div class="flex items-center gap-1.5 bg-white/80 dark:bg-slate-800/90 px-2.5 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700" title="Đổi màu chủ đạo">
               <button type="button" data-theme-btn="cobalt" class="theme-dot w-4 h-4 rounded-full bg-blue-700 ring-2 ring-offset-1 ring-blue-700 transition" title="Xanh Cobalt"></button>
               <button type="button" data-theme-btn="matcha" class="theme-dot w-4 h-4 rounded-full bg-emerald-600 hover:scale-110 transition" title="Xanh Matcha"></button>
               <button type="button" data-theme-btn="espresso" class="theme-dot w-4 h-4 rounded-full bg-amber-700 hover:scale-110 transition" title="Nâu Espresso"></button>
@@ -255,19 +256,45 @@
             </button>
           </div>
 
-          <!-- Nút báo sắp đến ngày sinh nhật (Liên kết sang trang Friends & Mimi Birthday) -->
-          <a
-            id="birthday-upcoming-btn"
-            href="https://friendsmimibirthday-rho.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-cobalt-50/90 dark:bg-slate-800/90 hover:bg-cobalt-600 hover:text-white text-cobalt-700 dark:text-cobalt-200 border border-cobalt-200/80 dark:border-slate-700 text-xs font-bold shadow-sm transition group self-start xl:self-end"
-            title="Mở trang Sinh Nhật Friends & Mimi"
-          >
-            <i data-lucide="cake" class="w-3.5 h-3.5 shrink-0 text-cobalt-600 dark:text-cobalt-200 group-hover:text-white transition"></i>
-            <span id="birthday-upcoming-text">Đang kiểm tra lịch sinh nhật...</span>
-            <i data-lucide="external-link" class="w-3 h-3 opacity-60 group-hover:opacity-100"></i>
-          </a>
+          <!-- Hàng 2: Thanh thông tin cân đối (Thời tiết Ba Đình, Hà Nội + Báo sắp sinh nhật Friends & Mimi) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+            <!-- Nút Thời tiết thực tế tại Ba Đình, Hà Nội -->
+            <button
+              type="button"
+              id="weather-badinh-btn"
+              class="flex items-center justify-between gap-2.5 px-3.5 py-2 rounded-xl bg-white/85 dark:bg-slate-800/90 hover:bg-cobalt-50/80 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition group"
+              title="Bấm để cập nhật lại thời tiết Ba Đình, Hà Nội"
+            >
+              <div class="flex items-center gap-2 min-w-0">
+                <span id="weather-icon-box" class="w-6 h-6 rounded-lg bg-cobalt-50 dark:bg-slate-700 text-cobalt-600 dark:text-cobalt-200 flex items-center justify-center shrink-0">
+                  <i data-lucide="cloud-sun" class="w-4 h-4"></i>
+                </span>
+                <span class="font-bold text-slate-800 dark:text-slate-100 shrink-0">Ba Đình, HN:</span>
+                <span id="weather-status-text" class="text-slate-600 dark:text-slate-300 truncate">Đang tải thời tiết...</span>
+              </div>
+              <span id="weather-temp-badge" class="px-2 py-0.5 rounded-lg bg-cobalt-100/80 dark:bg-slate-700 text-cobalt-700 dark:text-cobalt-200 font-extrabold text-[11px] shrink-0">
+                --°C
+              </span>
+            </button>
+
+            <!-- Nút báo sắp đến ngày sinh nhật (Cân đối 50/50 với ô thời tiết) -->
+            <a
+              id="birthday-upcoming-btn"
+              href="https://friendsmimibirthday-rho.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl bg-cobalt-50/90 dark:bg-slate-800/90 hover:bg-cobalt-600 hover:text-white text-cobalt-700 dark:text-cobalt-200 border border-cobalt-200/80 dark:border-slate-700 text-xs font-bold shadow-sm transition group"
+              title="Mở trang Sinh Nhật Friends & Mimi"
+            >
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-6 h-6 rounded-lg bg-white/80 dark:bg-slate-700 text-cobalt-600 dark:text-cobalt-200 group-hover:bg-white/20 group-hover:text-white flex items-center justify-center shrink-0 transition">
+                  <i data-lucide="cake" class="w-3.5 h-3.5"></i>
+                </span>
+                <span id="birthday-upcoming-text" class="truncate">Đang kiểm tra lịch sinh nhật...</span>
+              </div>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 shrink-0 opacity-60 group-hover:opacity-100"></i>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -652,30 +679,139 @@
       </div>
     </section>
 
-    <!-- BẢNG TỔNG KẾT DOANH THU CHU KỲ (ĐẶT Ở CUỐI TRANG) -->
-    <section class="mt-5 glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-5">
+    <!-- BẢNG TỔNG KẾT DOANH THU CHU KỲ & BIỂU ĐỒ NƯỚC BÁN CHẠY (ĐẶT Ở CUỐI TRANG) -->
+    <section class="mt-5 glass-panel rounded-3xl border border-white/80 dark:border-slate-800 p-4 sm:p-6">
       <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-2.5">
-          <span class="w-8 h-8 rounded-xl bg-cobalt-600 text-white flex items-center justify-center shrink-0">
-            <i data-lucide="bar-chart-horizontal" class="w-4 h-4"></i>
+          <span class="w-9 h-9 rounded-2xl bg-cobalt-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+            <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
           </span>
-          <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
-            Tổng Kết Doanh Thu Chu Kỳ
-          </h2>
+          <div>
+            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+              Phân Tích Doanh Thu & Xếp Hạng Món Bán Chạy
+            </h2>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+              Biểu đồ cột so sánh theo Tuần • Tháng • Năm và thống kê sản lượng từng món
+            </p>
+          </div>
         </div>
 
         <button
           type="button"
           id="btn-toggle-period-bars"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cobalt-50 dark:bg-slate-800 hover:bg-cobalt-600 hover:text-white text-cobalt-700 dark:text-cobalt-200 text-xs font-bold transition"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cobalt-50 dark:bg-slate-800 hover:bg-cobalt-600 hover:text-white text-cobalt-700 dark:text-cobalt-200 text-xs font-bold transition shrink-0"
         >
           <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-          <span id="period-toggle-text">Xem thống kê</span>
+          <span id="period-toggle-text">Xem biểu đồ</span>
         </button>
       </div>
 
-      <div id="period-revenue-wrapper" class="hidden mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-800">
-        <div id="period-revenue-bars" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5"></div>
+      <div id="period-revenue-wrapper" class="hidden mt-5 pt-5 border-t border-slate-200/60 dark:border-slate-800">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
+
+          <!-- 1. BIỂU ĐỒ CỘT DOANH THU (7 CỘT TRÊN XL) -->
+          <div class="xl:col-span-7 rounded-2xl bg-white/85 dark:bg-slate-900/75 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 flex flex-col justify-between">
+            <div>
+              <!-- Header + Bộ chọn Tuần / Tháng / Năm ở góc trên bên phải -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-200/60 dark:border-slate-800">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-cobalt-600 dark:text-cobalt-200">Biểu Đồ Cột Doanh Thu</span>
+                    <span id="rev-chart-subtitle" class="text-[11px] font-semibold text-slate-400">• Trong tuần này</span>
+                  </div>
+                  <div class="flex items-baseline gap-2 mt-1">
+                    <span id="rev-chart-total" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">0đ</span>
+                    <span id="rev-chart-meta" class="text-xs font-semibold text-slate-500 dark:text-slate-400">(0 đơn • TM: 0đ • CK: 0đ)</span>
+                  </div>
+                </div>
+
+                <!-- Nút chọn mức so sánh: Tuần | Tháng | Năm -->
+                <div class="inline-flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 self-start sm:self-auto shrink-0">
+                  <button type="button" data-rev-mode="week" class="rev-mode-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-cobalt-600 text-white shadow-sm">
+                    Tuần
+                  </button>
+                  <button type="button" data-rev-mode="month" class="rev-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600">
+                    Tháng
+                  </button>
+                  <button type="button" data-rev-mode="year" class="rev-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600">
+                    Năm
+                  </button>
+                </div>
+              </div>
+
+              <!-- Khu vực vẽ Biểu Đồ Cột (Vertical Column Chart) -->
+              <div class="mt-5 relative">
+                <!-- Đường lưới ngang tham chiếu (Grid lines) -->
+                <div class="inset-0 flex flex-col justify-between pointer-events-none h-56 sm:h-64 pb-7">
+                  <div class="border-b border-dashed border-slate-200/80 dark:border-slate-800 flex justify-between items-center">
+                    <span id="rev-grid-top" class="text-[10px] font-semibold text-slate-400 -mt-4">0đ</span>
+                  </div>
+                  <div class="border-b border-dashed border-slate-200/80 dark:border-slate-800 flex justify-between items-center">
+                    <span id="rev-grid-mid" class="text-[10px] font-semibold text-slate-400 -mt-4">0đ</span>
+                  </div>
+                  <div class="border-b border-slate-200 dark:border-slate-700"></div>
+                </div>
+
+                <!-- Các cột dữ liệu -->
+                <div id="revenue-column-chart" class="absolute inset-0 h-56 sm:h-64 flex items-end justify-between gap-1.5 sm:gap-2.5 pt-5 px-1"></div>
+              </div>
+            </div>
+
+            <!-- Chú thích biểu đồ cột -->
+            <div class="mt-4 pt-3 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-between flex-wrap gap-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+              <div class="flex items-center gap-4">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-sm bg-cobalt-600 inline-block"></span>
+                  <span>Tiền mặt (+Nợ TM)</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-sm bg-cobalt-200 dark:bg-cobalt-400/50 inline-block"></span>
+                  <span>Chuyển khoản (+Nợ CK)</span>
+                </span>
+              </div>
+              <span id="rev-chart-note" class="text-[11px] text-slate-400">So sánh từng ngày từ Thứ 2 đến Chủ Nhật</span>
+            </div>
+          </div>
+
+          <!-- 2. BIỂU ĐỒ NƯỚC BÁN CHẠY TỪ CAO ĐẾN THẤP (5 CỘT TRÊN XL) -->
+          <div class="xl:col-span-5 rounded-2xl bg-white/85 dark:bg-slate-900/75 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 flex flex-col justify-between">
+            <div>
+              <!-- Header + Bộ chọn Tuần / Tháng / Năm ở góc trên bên phải -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-200/60 dark:border-slate-800">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-cobalt-600 dark:text-cobalt-200">Xếp Hạng Nước Bán Chạy</span>
+                  </div>
+                  <p id="drink-chart-subtitle" class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1">
+                    Liệt kê từ bán chạy nhất đến ít nhất (0 ly)
+                  </p>
+                </div>
+
+                <!-- Nút chọn mức: Tuần | Tháng | Năm -->
+                <div class="inline-flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 self-start sm:self-auto shrink-0">
+                  <button type="button" data-drink-mode="week" class="drink-mode-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-cobalt-600 text-white shadow-sm">
+                    Tuần
+                  </button>
+                  <button type="button" data-drink-mode="month" class="drink-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600">
+                    Tháng
+                  </button>
+                  <button type="button" data-drink-mode="year" class="drink-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600">
+                    Năm
+                  </button>
+                </div>
+              </div>
+
+              <!-- Danh sách biểu đồ xếp hạng toàn bộ món từ cao xuống thấp -->
+              <div id="drink-ranking-chart" class="mt-3.5 space-y-2 max-h-64 overflow-y-auto pr-1"></div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+              <span id="drink-chart-total-cups">Tổng: 0 ly đã bán</span>
+              <span>Cuộn để xem đến món ít nhất</span>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -1088,9 +1224,77 @@
     let historyCurrentPage = 1;
     const HISTORY_PAGE_SIZE = 10;
 
+    let revenueChartMode = 'week'; // 'week' | 'month' | 'year'
+    let drinkChartMode = 'week';   // 'week' | 'month' | 'year'
+
     let editingOrderItems = [];
     let editingOrderPaymentMethod = 'cash';
     let pendingConfirmCallback = null;
+
+    // Tọa độ Quận Ba Đình, Hà Nội (21.0341° N, 105.8372° E)
+    async function fetchBaDinhWeather() {
+      const statusEl = document.getElementById('weather-status-text');
+      const tempEl = document.getElementById('weather-temp-badge');
+      const iconBox = document.getElementById('weather-icon-box');
+      if (!statusEl || !tempEl) return;
+
+      try {
+        statusEl.textContent = 'Đang cập nhật...';
+        const url = 'https://api.open-meteo.com/v1/forecast?latitude=21.0341&longitude=105.8372&current=temperature_2m,relative_humidity_2m,weather_code,is_day&timezone=Asia%2FBangkok';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Weather fetch error');
+        const data = await res.json();
+        const cur = data.current || {};
+        const temp = Math.round(Number(cur.temperature_2m ?? 26));
+        const humidity = Number(cur.relative_humidity_2m ?? 70);
+        const code = Number(cur.weather_code ?? 0);
+        const isDay = Number(cur.is_day ?? 1) === 1;
+
+        let condition = 'Trời quang';
+        let lucideIcon = isDay ? 'sun' : 'moon';
+
+        if (code === 0) {
+          condition = isDay ? 'Trời nắng đẹp' : 'Trời quang';
+          lucideIcon = isDay ? 'sun' : 'moon';
+        } else if (code === 1) {
+          condition = isDay ? 'Nắng nhẹ' : 'Ít mây';
+          lucideIcon = isDay ? 'cloud-sun' : 'cloud-moon';
+        } else if (code === 2) {
+          condition = 'Có mây rải rác';
+          lucideIcon = isDay ? 'cloud-sun' : 'cloud-moon';
+        } else if (code === 3) {
+          condition = 'Trời nhiều mây';
+          lucideIcon = 'cloud';
+        } else if (code === 45 || code === 48) {
+          condition = 'Sương mù nhẹ';
+          lucideIcon = 'cloud-fog';
+        } else if (code >= 51 && code <= 57) {
+          condition = 'Mưa phùn';
+          lucideIcon = 'cloud-drizzle';
+        } else if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
+          condition = 'Đang có mưa';
+          lucideIcon = 'cloud-rain';
+        } else if (code >= 95) {
+          condition = 'Mưa dông';
+          lucideIcon = 'cloud-lightning';
+        }
+
+        tempEl.textContent = `${temp}°C`;
+        statusEl.textContent = `${condition} • Ẩm ${humidity}%`;
+        if (iconBox) {
+          iconBox.innerHTML = `<i data-lucide="${lucideIcon}" class="w-4 h-4"></i>`;
+          lucide.createIcons();
+        }
+      } catch (err) {
+        statusEl.textContent = 'Mát mẻ • Hà Nội';
+        tempEl.textContent = '26°C';
+      }
+    }
+
+    // Tự động cập nhật thời tiết Ba Đình mỗi 10 phút
+    setInterval(() => {
+      fetchBaDinhWeather();
+    }, 10 * 60 * 1000);
 
     function formatDateObj(d) {
       const yyyy = d.getFullYear();
@@ -1546,79 +1750,310 @@
       });
     }
 
-    function renderPeriodRevenueBars() {
-      const container = document.getElementById('period-revenue-bars');
-      if (!container) return;
+    function formatShortVND(amount) {
+      const n = Number(amount || 0);
+      if (n === 0) return '0đ';
+      if (n >= 1000000) {
+        const tr = (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1);
+        return `${tr.replace('.', ',')}tr`;
+      }
+      if (n >= 1000) {
+        return `${Math.round(n / 1000)}k`;
+      }
+      return `${n}đ`;
+    }
 
-      const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    function parseOrderDate(dateStr) {
+      const parts = (dateStr || '').split('-');
+      if (parts.length !== 3) return null;
+      return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    }
 
-      const dayOfWeek = now.getDay();
-      const diffMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
-      const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diffMonday);
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      const threeMonthsStart = new Date(now.getFullYear(), now.getMonth() - 2, 1);
-      const yearStart = new Date(now.getFullYear(), 0, 1);
+    function renderRevenueColumnChart() {
+      const chartEl = document.getElementById('revenue-column-chart');
+      if (!chartEl) return;
 
-      const periods = [
-        { id: 'week', label: 'Tuần Này', sub: 'Từ Thứ 2 đầu tuần', start: weekStart },
-        { id: 'month', label: `Tháng ${now.getMonth() + 1}`, sub: 'Trong tháng hiện tại', start: monthStart },
-        { id: 'quarter', label: '3 Tháng Gần Đây', sub: 'Quý 90 ngày qua', start: threeMonthsStart },
-        { id: 'year', label: `Năm ${now.getFullYear()}`, sub: 'Tổng kết cả năm', start: yearStart }
-      ];
+      const refParts = (selectedDate || getTodayStr()).split('-');
+      const refDate = refParts.length === 3
+        ? new Date(Number(refParts[0]), Number(refParts[1]) - 1, Number(refParts[2]))
+        : new Date();
 
-      container.innerHTML = periods.map(p => {
-        let total = 0;
-        let cash = 0;
-        let transfer = 0;
-        let debt = 0;
-        let count = 0;
+      const buckets = [];
+      let subtitle = '';
+      let footerNote = '';
 
-        orders.forEach(o => {
-          const parts = (o.dateStr || '').split('-');
-          if (parts.length !== 3) return;
-          const oDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-          if (oDate >= p.start && oDate <= new Date(todayStart.getTime() + 86400000)) {
-            const amt = Number(o.totalAmount || 0);
-            total += amt;
-            count += 1;
+      if (revenueChartMode === 'week') {
+        // So sánh 7 ngày trong tuần của ngày đang chọn (Thứ 2 -> Chủ Nhật)
+        const dayOfWeek = refDate.getDay();
+        const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+        const monday = new Date(refDate.getFullYear(), refDate.getMonth(), refDate.getDate() + diffToMonday);
+        const dayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+          const dStr = formatDateObj(d);
+          const shortDM = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+          buckets.push({
+            key: dStr,
+            label: dayLabels[i],
+            subLabel: shortDM,
+            isCurrent: dStr === selectedDate,
+            cash: 0,
+            transfer: 0,
+            total: 0,
+            orders: 0,
+            matchFn: (oDate, oDateStr) => oDateStr === dStr
+          });
+        }
+        subtitle = `• Tuần (${buckets[0].subLabel} - ${buckets[6].subLabel})`;
+        footerNote = 'So sánh doanh thu từng ngày trong tuần (Thứ 2 ➔ Chủ Nhật)';
+      } else if (revenueChartMode === 'month') {
+        // So sánh các tuần trong tháng hiện tại (Tuần 1 -> Tuần 5)
+        const year = refDate.getFullYear();
+        const month = refDate.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const ranges = [
+          { label: 'Tuần 1', start: 1, end: 7 },
+          { label: 'Tuần 2', start: 8, end: 14 },
+          { label: 'Tuần 3', start: 15, end: 21 },
+          { label: 'Tuần 4', start: 22, end: 28 }
+        ];
+        if (daysInMonth > 28) {
+          ranges.push({ label: 'Tuần 5', start: 29, end: daysInMonth });
+        }
+
+        const curDay = refDate.getDate();
+        ranges.forEach(r => {
+          const mStr = String(month + 1).padStart(2, '0');
+          buckets.push({
+            key: r.label,
+            label: r.label,
+            subLabel: `${String(r.start).padStart(2, '0')}-${String(r.end).padStart(2, '0')}/${mStr}`,
+            isCurrent: curDay >= r.start && curDay <= r.end,
+            cash: 0,
+            transfer: 0,
+            total: 0,
+            orders: 0,
+            matchFn: (oDate) =>
+              oDate &&
+              oDate.getFullYear() === year &&
+              oDate.getMonth() === month &&
+              oDate.getDate() >= r.start &&
+              oDate.getDate() <= r.end
+          });
+        });
+        subtitle = `• Tháng ${month + 1}/${year}`;
+        footerNote = `So sánh doanh thu giữa các tuần trong Tháng ${month + 1}/${year}`;
+      } else {
+        // So sánh 12 tháng trong năm (T1 -> T12)
+        const year = refDate.getFullYear();
+        const curMonth = refDate.getMonth();
+        for (let m = 0; m < 12; m++) {
+          buckets.push({
+            key: `m_${m}`,
+            label: `T${m + 1}`,
+            subLabel: `${m + 1}/${String(year).slice(-2)}`,
+            isCurrent: m === curMonth,
+            cash: 0,
+            transfer: 0,
+            total: 0,
+            orders: 0,
+            matchFn: (oDate) => oDate && oDate.getFullYear() === year && oDate.getMonth() === m
+          });
+        }
+        subtitle = `• Năm ${year}`;
+        footerNote = `So sánh doanh thu 12 tháng trong Năm ${year}`;
+      }
+
+      // Cộng dồn đơn hàng vào từng cột
+      orders.forEach(o => {
+        const oDate = parseOrderDate(o.dateStr);
+        const amt = Number(o.totalAmount || 0);
+        buckets.forEach(b => {
+          if (b.matchFn(oDate, o.dateStr)) {
+            b.total += amt;
+            b.orders += 1;
             if (o.paymentMethod === 'transfer' || o.paymentMethod === 'debt_transfer') {
-              transfer += amt;
+              b.transfer += amt;
             } else {
-              cash += amt;
-            }
-            if (o.paymentMethod === 'debt_cash' || o.paymentMethod === 'debt_transfer') {
-              debt += amt;
+              b.cash += amt;
             }
           }
         });
+      });
 
-        const cashW = total > 0 ? Math.round((cash / total) * 100) : 0;
-        const transW = total > 0 ? Math.max(0, 100 - cashW) : 0;
+      const periodTotal = buckets.reduce((s, b) => s + b.total, 0);
+      const periodCash = buckets.reduce((s, b) => s + b.cash, 0);
+      const periodTransfer = buckets.reduce((s, b) => s + b.transfer, 0);
+      const periodOrders = buckets.reduce((s, b) => s + b.orders, 0);
+      const maxVal = Math.max(...buckets.map(b => b.total), 100000);
+
+      document.getElementById('rev-chart-subtitle').textContent = subtitle;
+      document.getElementById('rev-chart-total').textContent = formatVND(periodTotal);
+      document.getElementById('rev-chart-meta').textContent = `(${periodOrders} đơn • TM: ${formatShortVND(periodCash)} • CK: ${formatShortVND(periodTransfer)})`;
+      document.getElementById('rev-chart-note').textContent = footerNote;
+
+      document.getElementById('rev-grid-top').textContent = formatShortVND(maxVal);
+      document.getElementById('rev-grid-mid').textContent = formatShortVND(Math.round(maxVal / 2));
+
+      chartEl.innerHTML = buckets.map(b => {
+        const heightPct = b.total > 0 ? Math.max(8, Math.round((b.total / maxVal) * 100)) : 2;
+        const cashShare = b.total > 0 ? Math.round((b.cash / b.total) * 100) : 0;
+        const transShare = b.total > 0 ? Math.max(0, 100 - cashShare) : 0;
 
         return `
-          <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 flex flex-col justify-between">
-            <div class="flex items-center justify-between gap-2">
-              <div>
-                <span class="text-xs font-extrabold uppercase tracking-wider text-cobalt-700 dark:text-cobalt-200">${p.label}</span>
-                <span class="block text-[10px] text-slate-400">${p.sub} (${count} đơn)</span>
+          <div class="flex-1 flex flex-col items-center h-full justify-end group relative min-w-0">
+            <!-- Tooltip chi tiết khi di chuột -->
+            <div class="opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full z-20 px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-bold shadow-lg whitespace-nowrap">
+              <div>${b.label} (${b.subLabel}): ${formatVND(b.total)}</div>
+              <div class="font-medium opacity-80">TM: ${formatVND(b.cash)} • CK: ${formatVND(b.transfer)} (${b.orders} đơn)</div>
+            </div>
+
+            <!-- Nhãn số tiền trên đỉnh cột -->
+            <span class="text-[10px] font-extrabold ${b.total > 0 ? 'text-cobalt-700 dark:text-cobalt-200' : 'text-slate-300 dark:text-slate-600'} mb-1 truncate max-w-full">
+              ${formatShortVND(b.total)}
+            </span>
+
+            <!-- Thân cột đứng (Xếp chồng Tiền mặt & Chuyển khoản) -->
+            <div class="w-full max-w-[38px] flex-1 flex items-end justify-center">
+              <div
+                style="height: ${heightPct}%"
+                class="w-full rounded-t-xl overflow-hidden flex flex-col justify-end transition-all duration-500 ${
+                  b.total === 0
+                    ? 'bg-slate-200/70 dark:bg-slate-800'
+                    : b.isCurrent
+                    ? 'ring-2 ring-cobalt-600 ring-offset-1 dark:ring-offset-slate-900 shadow-md'
+                    : 'opacity-90 group-hover:opacity-100'
+                }"
+              >
+                ${b.total > 0 ? `
+                  <div style="height: ${transShare}%" class="w-full bg-cobalt-200 dark:bg-cobalt-400/50 transition-all duration-500"></div>
+                  <div style="height: ${cashShare}%" class="w-full bg-cobalt-600 transition-all duration-500"></div>
+                ` : ''}
               </div>
-              <div class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">${formatVND(total)}</div>
             </div>
 
-            <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex my-3">
-              <div style="width: ${cashW}%" class="bg-cobalt-600 h-full transition-all duration-500" title="Tiền mặt: ${formatVND(cash)}"></div>
-              <div style="width: ${transW}%" class="bg-cobalt-200 dark:bg-cobalt-800 h-full transition-all duration-500" title="Chuyển khoản: ${formatVND(transfer)}"></div>
-            </div>
-
-            <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cobalt-600"></span>TM: ${formatVND(cash)}</span>
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cobalt-200 dark:bg-cobalt-800"></span>CK: ${formatVND(transfer)}</span>
-              <span>Nợ: ${formatVND(debt)}</span>
+            <!-- Nhãn trục hoành (X-axis) -->
+            <div class="mt-1.5 text-center leading-tight">
+              <div class="text-[10px] sm:text-[11px] font-extrabold ${b.isCurrent ? 'text-cobalt-600 dark:text-cobalt-200 underline' : 'text-slate-600 dark:text-slate-300'}">${b.label}</div>
+              <div class="text-[9px] text-slate-400 hidden sm:block">${b.subLabel}</div>
             </div>
           </div>
         `;
       }).join('');
+    }
+
+    function renderBestSellingDrinksChart() {
+      const listEl = document.getElementById('drink-ranking-chart');
+      if (!listEl) return;
+
+      const refParts = (selectedDate || getTodayStr()).split('-');
+      const refDate = refParts.length === 3
+        ? new Date(Number(refParts[0]), Number(refParts[1]) - 1, Number(refParts[2]))
+        : new Date();
+
+      const year = refDate.getFullYear();
+      const month = refDate.getMonth();
+      const dayOfWeek = refDate.getDay();
+      const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+      const monday = new Date(year, month, refDate.getDate() + diffToMonday);
+      const sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6, 23, 59, 59);
+
+      // Khởi tạo bảng thống kê với toàn bộ món trong Menu để biết cả những món bán ít nhất (0 ly)
+      const statsMap = {};
+      menuItems.forEach(m => {
+        statsMap[m.name] = {
+          name: m.name,
+          category: m.category || 'Menu',
+          qty: 0,
+          revenue: 0
+        };
+      });
+
+      let totalCupsPeriod = 0;
+
+      orders.forEach(o => {
+        const oDate = parseOrderDate(o.dateStr);
+        if (!oDate) return;
+
+        let inPeriod = false;
+        if (drinkChartMode === 'week') {
+          inPeriod = oDate >= monday && oDate <= sunday;
+        } else if (drinkChartMode === 'month') {
+          inPeriod = oDate.getFullYear() === year && oDate.getMonth() === month;
+        } else {
+          inPeriod = oDate.getFullYear() === year;
+        }
+
+        if (!inPeriod) return;
+
+        (o.items || []).forEach(it => {
+          const q = Number(it.qty || 1);
+          const rev = Number(it.price || 0) * q;
+          totalCupsPeriod += q;
+          if (!statsMap[it.name]) {
+            statsMap[it.name] = {
+              name: it.name,
+              category: 'Món ngoài',
+              qty: 0,
+              revenue: 0
+            };
+          }
+          statsMap[it.name].qty += q;
+          statsMap[it.name].revenue += rev;
+        });
+      });
+
+      // Sắp xếp từ bán chạy nhất xuống ít nhất
+      const ranked = Object.values(statsMap).sort((a, b) => {
+        if (b.qty !== a.qty) return b.qty - a.qty;
+        if (b.revenue !== a.revenue) return b.revenue - a.revenue;
+        return a.name.localeCompare(b.name, 'vi');
+      });
+
+      const maxQty = Math.max(...ranked.map(r => r.qty), 1);
+
+      let modeLabel = 'trong tuần này';
+      if (drinkChartMode === 'month') modeLabel = `trong Tháng ${month + 1}/${year}`;
+      if (drinkChartMode === 'year') modeLabel = `trong Năm ${year}`;
+
+      document.getElementById('drink-chart-subtitle').textContent = `Xếp hạng từ cao nhất đến ít nhất (${modeLabel})`;
+      document.getElementById('drink-chart-total-cups').textContent = `Tổng sản lượng: ${totalCupsPeriod} ly (${ranked.length} mặt hàng)`;
+
+      listEl.innerHTML = ranked.map((item, idx) => {
+        const barWidth = item.qty > 0 ? Math.max(6, Math.round((item.qty / maxQty) * 100)) : 0;
+        const isTop3 = idx < 3 && item.qty > 0;
+
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60">
+            <div class="flex items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-5 h-5 rounded-lg text-[10px] font-extrabold flex items-center justify-center shrink-0 ${
+                  isTop3
+                    ? 'bg-cobalt-600 text-white shadow-sm'
+                    : 'bg-slate-200/80 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                }">
+                  ${idx + 1}
+                </span>
+                <span class="font-extrabold text-slate-900 dark:text-white truncate">${item.name}</span>
+                <span class="text-[10px] text-slate-400 hidden sm:inline truncate">(${item.category})</span>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="font-extrabold ${item.qty > 0 ? 'text-cobalt-700 dark:text-cobalt-200' : 'text-slate-400'}">${item.qty} ly</span>
+                <span class="text-[10px] font-semibold text-slate-400 w-14 text-right">${formatShortVND(item.revenue)}</span>
+              </div>
+            </div>
+            <div class="w-full h-1.5 rounded-full bg-slate-200/80 dark:bg-slate-700 overflow-hidden mt-1.5">
+              <div style="width: ${barWidth}%" class="h-full rounded-full ${isTop3 ? 'bg-cobalt-600' : 'bg-cobalt-500/70'} transition-all duration-500"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPeriodRevenueBars() {
+      renderRevenueColumnChart();
+      renderBestSellingDrinksChart();
     }
 
     function renderCategories() {
@@ -2353,6 +2788,13 @@
         historyCurrentPage = 1;
         updateShiftUI();
         renderDashboardAndHistory();
+        renderPeriodRevenueBars();
+      });
+
+      // 1b. Bấm vào ô Thời tiết Ba Đình để làm mới ngay
+      document.getElementById('weather-badinh-btn')?.addEventListener('click', () => {
+        fetchBaDinhWeather();
+        showToast('Đã cập nhật thời tiết Ba Đình, Hà Nội!');
       });
 
       // 2. Chuyển trang lịch sử (10 đơn / trang)
@@ -2407,29 +2849,7 @@
         showToast('Đã về nền mặc định!');
       });
 
-      // 4. Chọn màu chủ đạo & Chế độ Sáng / Tối
-      const savedTheme = localStorage.getItem('mimi_pos_theme') || 'cobalt';
-      document.body.setAttribute('data-theme', savedTheme);
-      const savedDark = localStorage.getItem('mimi_pos_dark') === '1';
-      if (savedDark) document.documentElement.classList.add('dark');
-
-      document.querySelectorAll('[data-theme-btn]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const t = btn.getAttribute('data-theme-btn');
-          document.body.setAttribute('data-theme', t);
-          try { localStorage.setItem('mimi_pos_theme', t); } catch (e) {}
-          document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('ring-2', 'ring-offset-1', 'ring-slate-400'));
-          btn.classList.add('ring-2', 'ring-offset-1', 'ring-slate-400');
-        });
-      });
-
-      document.getElementById('btn-theme-toggle').addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        const isDark = document.documentElement.classList.contains('dark');
-        try { localStorage.setItem('mimi_pos_dark', isDark ? '1' : '0'); } catch (e) {}
-      });
-
-      // 5. Bật/Tắt bảng thống kê doanh thu chu kỳ ở cuối trang
+      // 5. Bật/Tắt bảng thống kê doanh thu chu kỳ & Chuyển chế độ Tuần / Tháng / Năm
       const periodWrapper = document.getElementById('period-revenue-wrapper');
       const periodBtnText = document.getElementById('period-toggle-text');
       document.getElementById('btn-toggle-period-bars').addEventListener('click', () => {
@@ -2440,8 +2860,30 @@
           periodBtnText.textContent = 'Thu gọn';
         } else {
           periodWrapper.classList.add('hidden');
-          periodBtnText.textContent = 'Xem thống kê';
+          periodBtnText.textContent = 'Xem biểu đồ';
         }
+      });
+
+      document.querySelectorAll('.rev-mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          revenueChartMode = btn.getAttribute('data-rev-mode') || 'week';
+          document.querySelectorAll('.rev-mode-btn').forEach(b => {
+            b.className = 'rev-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600';
+          });
+          btn.className = 'rev-mode-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-cobalt-600 text-white shadow-sm';
+          renderRevenueColumnChart();
+        });
+      });
+
+      document.querySelectorAll('.drink-mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          drinkChartMode = btn.getAttribute('data-drink-mode') || 'week';
+          document.querySelectorAll('.drink-mode-btn').forEach(b => {
+            b.className = 'drink-mode-btn px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-600 dark:text-slate-300 hover:text-cobalt-600';
+          });
+          btn.className = 'drink-mode-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-cobalt-600 text-white shadow-sm';
+          renderBestSellingDrinksChart();
+        });
       });
 
       // 6. Bảng Lịch Phân Ca Làm Việc Cả Tuần
@@ -2850,6 +3292,7 @@
 
     window.addEventListener('load', async () => {
       initEvents();
+      fetchBaDinhWeather();
       updateUpcomingBirthdayUI();
       renderCategories();
       renderMenuGrid();
