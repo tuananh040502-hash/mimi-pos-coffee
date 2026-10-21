@@ -3066,6 +3066,35 @@
         const dayStr = document.getElementById('shift-day-select').value;
         const shiftCode = document.getElementById('shift-type-select').value;
         if (!staffName || !dayStr || !shiftCode) return;
+
+        const key = `${dayStr}_${shiftCode}`;
+        if (!Array.isArray(weeklyShifts[key])) {
+          weeklyShifts[key] = [];
+        }
+        if (weeklyShifts[key].length >= 4) {
+          showToast('Mỗi ca tối đa 4 nhân viên!');
+          return;
+        }
+        weeklyShifts[key].push(staffName);
+        nameInput.value = '';
+        await persistWeeklyShifts();
+        showToast(`Đã thêm ${staffName} vào ${SHIFT_META[shiftCode].name} (${dayStr})!`);
+      });
+
+      // 7. Nhật ký hoạt động (Hoạt Động)
+      const actModal = document.getElementById('activity-log-modal');
+      document.getElementById('btn-open-activity-log')?.addEventListener('click', async () => {
+        await purgeOldActivities();
+        renderActivityLogModal();
+        actModal?.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-activity-modal')?.addEventListener('click', () => {
+        actModal?.classList.add('hidden');
+      });
+      actModal?.addEventListener('click', (e) => {
+        if (e.target.id === 'activity-log-modal') actModal.classList.add('hidden');
+      });
+
       // 8. Tìm kiếm Menu + Nút X xóa nhanh 1 chạm
       const menuSearchInput = document.getElementById('menu-search');
       menuSearchInput.addEventListener('input', (e) => {
