@@ -201,57 +201,73 @@
           </div>
         </div>
 
-        <!-- Controls: Theme Color, Date Filter, Shift Schedule, Activity Log, Menu Edit, Export, Dark Mode -->
-        <div class="flex items-center flex-wrap gap-2">
-          <!-- Chọn màu chủ đạo -->
-          <div class="flex items-center gap-1.5 bg-white/80 dark:bg-slate-800/90 px-2.5 py-1.5 rounded-xl border border-slate-200/80 dark:border-slate-700" title="Đổi màu chủ đạo">
-            <button type="button" data-theme-btn="cobalt" class="theme-dot w-4 h-4 rounded-full bg-blue-700 ring-2 ring-offset-1 ring-blue-700 transition" title="Xanh Cobalt"></button>
-            <button type="button" data-theme-btn="matcha" class="theme-dot w-4 h-4 rounded-full bg-emerald-600 hover:scale-110 transition" title="Xanh Matcha"></button>
-            <button type="button" data-theme-btn="espresso" class="theme-dot w-4 h-4 rounded-full bg-amber-700 hover:scale-110 transition" title="Nâu Espresso"></button>
-            <button type="button" data-theme-btn="berry" class="theme-dot w-4 h-4 rounded-full bg-rose-600 hover:scale-110 transition" title="Đỏ Berry"></button>
-            <button type="button" data-theme-btn="violet" class="theme-dot w-4 h-4 rounded-full bg-violet-600 hover:scale-110 transition" title="Tím Violet"></button>
+        <!-- Controls: Theme Color, Date Filter, Shift Schedule, Activity Log, Menu Edit, Export, Dark Mode & Birthday Link -->
+        <div class="flex flex-col xl:items-end gap-2">
+          <div class="flex items-center flex-wrap gap-2">
+            <!-- Chọn màu chủ đạo -->
+            <div class="flex items-center gap-1.5 bg-white/80 dark:bg-slate-800/90 px-2.5 py-1.5 rounded-xl border border-slate-200/80 dark:border-slate-700" title="Đổi màu chủ đạo">
+              <button type="button" data-theme-btn="cobalt" class="theme-dot w-4 h-4 rounded-full bg-blue-700 ring-2 ring-offset-1 ring-blue-700 transition" title="Xanh Cobalt"></button>
+              <button type="button" data-theme-btn="matcha" class="theme-dot w-4 h-4 rounded-full bg-emerald-600 hover:scale-110 transition" title="Xanh Matcha"></button>
+              <button type="button" data-theme-btn="espresso" class="theme-dot w-4 h-4 rounded-full bg-amber-700 hover:scale-110 transition" title="Nâu Espresso"></button>
+              <button type="button" data-theme-btn="berry" class="theme-dot w-4 h-4 rounded-full bg-rose-600 hover:scale-110 transition" title="Đỏ Berry"></button>
+              <button type="button" data-theme-btn="violet" class="theme-dot w-4 h-4 rounded-full bg-violet-600 hover:scale-110 transition" title="Tím Violet"></button>
+            </div>
+
+            <!-- Chọn ngày xem báo cáo -->
+            <div class="flex items-center gap-1.5 bg-white/80 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200/80 dark:border-slate-700">
+              <i data-lucide="calendar" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
+              <input
+                type="date"
+                id="filter-date"
+                class="bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 focus:outline-none cursor-pointer"
+              />
+            </div>
+
+            <!-- Nút mở Quản lý Ca Làm Tuần -->
+            <button id="btn-toggle-schedule" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cobalt-600 hover:bg-cobalt-700 text-white text-xs font-bold shadow-sm transition">
+              <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+              <span>Lịch Ca Làm</span>
+            </button>
+
+            <!-- Nút Nhật Ký Hoạt Động -->
+            <button id="btn-open-activity-log" type="button" class="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 hover:bg-cobalt-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition">
+              <i data-lucide="history" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
+              <span>Hoạt Động</span>
+              <span id="activity-count-badge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-cobalt-100 dark:bg-slate-700 text-cobalt-700 dark:text-cobalt-200 font-extrabold">0</span>
+            </button>
+
+            <!-- Sửa Menu -->
+            <button id="btn-manage-menu" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 hover:bg-cobalt-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition">
+              <i data-lucide="book-open" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
+              <span>Sửa Menu</span>
+            </button>
+
+            <!-- Xuất Excel -->
+            <button id="btn-export-excel" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 hover:bg-cobalt-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
+              <span class="hidden sm:inline">Xuất Excel</span>
+            </button>
+
+            <!-- Đổi Ngày / Đêm -->
+            <button id="btn-theme-toggle" type="button" class="p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 transition" title="Chế độ Sáng / Tối">
+              <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+              <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+            </button>
           </div>
 
-          <!-- Chọn ngày xem báo cáo -->
-          <div class="flex items-center gap-1.5 bg-white/80 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200/80 dark:border-slate-700">
-            <i data-lucide="calendar" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
-            <input
-              type="date"
-              id="filter-date"
-              class="bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 focus:outline-none cursor-pointer"
-            />
-          </div>
-
-          <!-- Nút mở Quản lý Ca Làm Tuần -->
-          <button id="btn-toggle-schedule" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cobalt-600 hover:bg-cobalt-700 text-white text-xs font-bold shadow-sm transition">
-            <i data-lucide="calendar-clock" class="w-4 h-4"></i>
-            <span>Lịch Ca Làm</span>
-          </button>
-
-          <!-- Nút Nhật Ký Hoạt Động -->
-          <button id="btn-open-activity-log" type="button" class="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 hover:bg-cobalt-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition">
-            <i data-lucide="history" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
-            <span>Hoạt Động</span>
-            <span id="activity-count-badge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-cobalt-100 dark:bg-slate-700 text-cobalt-700 dark:text-cobalt-200 font-extrabold">0</span>
-          </button>
-
-          <!-- Sửa Menu -->
-          <button id="btn-manage-menu" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 hover:bg-cobalt-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition">
-            <i data-lucide="book-open" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
-            <span>Sửa Menu</span>
-          </button>
-
-          <!-- Xuất Excel -->
-          <button id="btn-export-excel" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 hover:bg-cobalt-50 text-slate-700 dark:text-slate-200 text-xs font-bold transition">
-            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-cobalt-600 dark:text-cobalt-200"></i>
-            <span class="hidden sm:inline">Xuất Excel</span>
-          </button>
-
-          <!-- Đổi Ngày / Đêm -->
-          <button id="btn-theme-toggle" type="button" class="p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 transition" title="Chế độ Sáng / Tối">
-            <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
-            <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
-          </button>
+          <!-- Nút báo sắp đến ngày sinh nhật (Liên kết sang trang Friends & Mimi Birthday) -->
+          <a
+            id="birthday-upcoming-btn"
+            href="https://friendsmimibirthday-rho.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-cobalt-50/90 dark:bg-slate-800/90 hover:bg-cobalt-600 hover:text-white text-cobalt-700 dark:text-cobalt-200 border border-cobalt-200/80 dark:border-slate-700 text-xs font-bold shadow-sm transition group self-start xl:self-end"
+            title="Mở trang Sinh Nhật Friends & Mimi"
+          >
+            <i data-lucide="cake" class="w-3.5 h-3.5 shrink-0 text-cobalt-600 dark:text-cobalt-200 group-hover:text-white transition"></i>
+            <span id="birthday-upcoming-text">Đang kiểm tra lịch sinh nhật...</span>
+            <i data-lucide="external-link" class="w-3 h-3 opacity-60 group-hover:opacity-100"></i>
+          </a>
         </div>
       </div>
 
@@ -755,6 +771,58 @@
           <input id="edit-order-note" type="text" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs sm:text-sm" />
         </div>
 
+        <!-- Chỉnh sửa hình thức thanh toán & Ghi nợ (Chỉ trong phần Sửa đơn hàng) -->
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-bold text-slate-600 dark:text-slate-300">
+              Hình thức thanh toán
+            </label>
+            <button
+              type="button"
+              id="btn-edit-toggle-debt"
+              class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-semibold text-slate-500 hover:text-cobalt-600 dark:text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 transition"
+            >
+              <i data-lucide="notebook-pen" class="w-3 h-3"></i>
+              <span>Ghi nợ</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              id="edit-pay-cash-btn"
+              class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border-2 font-extrabold text-xs transition border-cobalt-600 bg-cobalt-600 text-white shadow-sm"
+            >
+              <span>Tiền Mặt</span>
+            </button>
+            <button
+              type="button"
+              id="edit-pay-transfer-btn"
+              class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border font-bold text-xs transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200"
+            >
+              <span>Chuyển Khoản</span>
+            </button>
+          </div>
+
+          <div id="edit-debt-sub-options" class="hidden mt-2 pt-2 border-t border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-end gap-2">
+            <span class="text-[11px] font-medium text-slate-500 mr-auto">Loại ghi nợ:</span>
+            <button
+              type="button"
+              id="edit-pay-debt-cash-btn"
+              class="px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300"
+            >
+              Nợ Tiền Mặt
+            </button>
+            <button
+              type="button"
+              id="edit-pay-debt-transfer-btn"
+              class="px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300"
+            >
+              Nợ Chuyển Khoản
+            </button>
+          </div>
+        </div>
+
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-xs font-bold text-slate-600 dark:text-slate-300">Danh sách món trong đơn</label>
@@ -818,7 +886,7 @@
           </span>
           <div>
             <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">Nhật Ký Hoạt Động</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Lịch sử lên đơn, chỉnh sửa đơn, xóa đơn và gạch nợ</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Tự động xóa các hoạt động cũ sau 3 ngày theo thời gian thực</p>
           </div>
         </div>
         <button type="button" id="btn-close-activity-modal" class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
@@ -992,6 +1060,22 @@
       T: { code: 'T', name: 'Ca Tối', hours: '18h00 - 22h30', badge: 'Ca Tối (18h-22h30)' }
     };
 
+    // Danh sách thành viên mặc định đồng bộ từ trang Sinh Nhật Friends & Mimi
+    const FALLBACK_BIRTHDAY_MEMBERS = [
+      { id: '1', name: 'Chị Mee', day: 22, month: 7 },
+      { id: '3', name: 'Anh Việt', day: 26, month: 10 },
+      { id: '7', name: 'Chị Hoa', day: 30, month: 6 },
+      { id: '8', name: 'Anh Bình', day: 12, month: 9 },
+      { id: '9', name: 'Hiếu Đàn', day: 27, month: 8 },
+      { id: '10', name: 'Anh Phi', day: 1, month: 1 },
+      { id: '12', name: 'Hiếu Đĩa', day: 23, month: 11 },
+      { id: '13', name: 'Bê', day: 4, month: 5 },
+      { id: '37', name: 'Kano', day: 5, month: 9 }
+    ];
+
+    const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000; // 3 ngày theo thời gian thực
+
+    let birthdayMembers = [...FALLBACK_BIRTHDAY_MEMBERS];
     let menuItems = [...DEFAULT_MIMI_MENU];
     let orders = [];
     let weeklyShifts = {};
@@ -1005,6 +1089,7 @@
     const HISTORY_PAGE_SIZE = 10;
 
     let editingOrderItems = [];
+    let editingOrderPaymentMethod = 'cash';
     let pendingConfirmCallback = null;
 
     function formatDateObj(d) {
@@ -1081,7 +1166,71 @@
       } catch (e) {}
     }
 
+    // Tự động xóa các hoạt động cũ quá 3 ngày theo thời gian thực
+    async function purgeOldActivities() {
+      const now = Date.now();
+      const expired = activityLogs.filter(item => !item.createdAt || (now - Number(item.createdAt)) > THREE_DAYS_MS);
+      if (expired.length > 0) {
+        activityLogs = activityLogs.filter(item => item.createdAt && (now - Number(item.createdAt)) <= THREE_DAYS_MS);
+        updateActivityBadge();
+        saveLocalFallback();
+        if (db) {
+          for (const exp of expired) {
+            try {
+              await deleteDoc(doc(db, 'mimi_activities', exp.id));
+            } catch (e) {}
+          }
+        }
+      }
+    }
+
+    // Kiểm tra tự động mỗi 5 phút để dọn hoạt động quá 3 ngày
+    setInterval(() => {
+      purgeOldActivities();
+    }, 5 * 60 * 1000);
+
+    // Tính số ngày còn lại đến sinh nhật gần nhất và hiển thị lên nút góc trên
+    function getDaysUntilBirthday(day, month) {
+      if (!day || !month) return Infinity;
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      let nextBday = new Date(now.getFullYear(), Number(month) - 1, Number(day));
+      if (nextBday < today) {
+        nextBday = new Date(now.getFullYear() + 1, Number(month) - 1, Number(day));
+      }
+      return Math.round((nextBday - today) / (1000 * 60 * 60 * 24));
+    }
+
+    function updateUpcomingBirthdayUI() {
+      const textEl = document.getElementById('birthday-upcoming-text');
+      const btnEl = document.getElementById('birthday-upcoming-btn');
+      if (!textEl || !btnEl) return;
+
+      const validMembers = birthdayMembers.filter(m => m.day && m.month);
+      if (validMembers.length === 0) {
+        textEl.textContent = 'Xem lịch sinh nhật Friends & Mimi';
+        return;
+      }
+
+      const sorted = [...validMembers].sort(
+        (a, b) => getDaysUntilBirthday(a.day, a.month) - getDaysUntilBirthday(b.day, b.month)
+      );
+      const minDays = getDaysUntilBirthday(sorted[0].day, sorted[0].month);
+      const nearestList = sorted.filter(m => getDaysUntilBirthday(m.day, m.month) === minDays);
+      const names = nearestList.map(m => m.name).join(', ');
+      const dateFormatted = `${String(sorted[0].day).padStart(2, '0')}/${String(sorted[0].month).padStart(2, '0')}`;
+
+      if (minDays === 0) {
+        textEl.innerHTML = `🎉 Hôm nay sinh nhật: <strong>${names}</strong> (${dateFormatted})`;
+        btnEl.classList.add('ring-2', 'ring-cobalt-500');
+      } else {
+        textEl.innerHTML = `Sắp sinh nhật: <strong>${names}</strong> (${dateFormatted} • còn ${minDays} ngày)`;
+        btnEl.classList.remove('ring-2', 'ring-cobalt-500');
+      }
+    }
+
     async function logActivity(actionType, detailText) {
+      await purgeOldActivities();
       const now = new Date();
       const entry = {
         id: 'act_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
@@ -1242,11 +1391,23 @@
         }
       }, () => {});
 
-      // 4. Đồng bộ Nhật Ký Hoạt Động
-      onSnapshot(collection(db, 'mimi_activities'), (snap) => {
+      // 4. Đồng bộ Nhật Ký Hoạt Động (Tự động xóa các mục quá 3 ngày)
+      onSnapshot(collection(db, 'mimi_activities'), async (snap) => {
         if (!snap.empty) {
           activityLogs = snap.docs.map(d => d.data()).sort((a, b) => b.createdAt - a.createdAt);
+          await purgeOldActivities();
           updateActivityBadge();
+        } else {
+          activityLogs = [];
+          updateActivityBadge();
+        }
+      }, () => {});
+
+      // 5. Đồng bộ Danh sách Sinh Nhật từ dự án Friends & Mimi Birthday
+      onSnapshot(collection(db, 'members'), (snap) => {
+        if (!snap.empty) {
+          birthdayMembers = snap.docs.map(d => d.data());
+          updateUpcomingBirthdayUI();
         }
       }, () => {});
     }
@@ -1262,7 +1423,9 @@
         const savedActs = localStorage.getItem('mimi_pos_activities');
         if (savedActs) activityLogs = JSON.parse(savedActs);
       } catch (e) {}
+      purgeOldActivities();
       updateActivityBadge();
+      updateUpcomingBirthdayUI();
       renderCategories();
       renderMenuGrid();
       updateShiftUI();
@@ -1880,6 +2043,33 @@
       lucide.createIcons();
     }
 
+    function setEditOrderPaymentMethodUI(method) {
+      editingOrderPaymentMethod = method || 'cash';
+      const cashBtn = document.getElementById('edit-pay-cash-btn');
+      const transBtn = document.getElementById('edit-pay-transfer-btn');
+      const debtCashBtn = document.getElementById('edit-pay-debt-cash-btn');
+      const debtTransBtn = document.getElementById('edit-pay-debt-transfer-btn');
+      const debtSubBox = document.getElementById('edit-debt-sub-options');
+
+      const inactiveMain = 'flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border font-bold text-xs transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200';
+      const activeMain = 'flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border-2 font-extrabold text-xs transition border-cobalt-600 bg-cobalt-600 text-white shadow-sm';
+      const inactiveDebt = 'px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300';
+      const activeDebt = 'px-2.5 py-1.5 rounded-xl border-2 text-[11px] font-extrabold transition border-cobalt-600 bg-cobalt-600 text-white shadow-sm';
+
+      if (cashBtn) cashBtn.className = editingOrderPaymentMethod === 'cash' ? activeMain : inactiveMain;
+      if (transBtn) transBtn.className = editingOrderPaymentMethod === 'transfer' ? activeMain : inactiveMain;
+      if (debtCashBtn) debtCashBtn.className = editingOrderPaymentMethod === 'debt_cash' ? activeDebt : inactiveDebt;
+      if (debtTransBtn) debtTransBtn.className = editingOrderPaymentMethod === 'debt_transfer' ? activeDebt : inactiveDebt;
+
+      if (debtSubBox) {
+        if (editingOrderPaymentMethod === 'debt_cash' || editingOrderPaymentMethod === 'debt_transfer') {
+          debtSubBox.classList.remove('hidden');
+        } else {
+          debtSubBox.classList.add('hidden');
+        }
+      }
+    }
+
     function openEditOrderModal(orderId) {
       const target = orders.find(o => o.id === orderId);
       if (!target) return;
@@ -1889,6 +2079,8 @@
       document.getElementById('edit-order-customer').value = target.customer || '';
       document.getElementById('edit-order-discount').value = target.discount || 0;
       document.getElementById('edit-order-note').value = target.note || '';
+
+      setEditOrderPaymentMethodUI(target.paymentMethod || 'cash');
 
       editingOrderItems = (target.items || []).map(i => ({ ...i }));
 
@@ -2296,7 +2488,8 @@
 
       // 7. Nhật ký hoạt động (Activity Log)
       const actModal = document.getElementById('activity-log-modal');
-      document.getElementById('btn-open-activity-log').addEventListener('click', () => {
+      document.getElementById('btn-open-activity-log').addEventListener('click', async () => {
+        await purgeOldActivities();
         renderActivityLogModal();
         actModal.classList.remove('hidden');
       });
@@ -2441,6 +2634,15 @@
       document.getElementById('btn-cancel-edit-order').addEventListener('click', () => editOrderModal.classList.add('hidden'));
       document.getElementById('edit-order-discount').addEventListener('input', () => renderEditingOrderItems());
 
+      // Chọn phương thức thanh toán & Ghi nợ trong cửa sổ Sửa Đơn Hàng
+      document.getElementById('edit-pay-cash-btn').addEventListener('click', () => setEditOrderPaymentMethodUI('cash'));
+      document.getElementById('edit-pay-transfer-btn').addEventListener('click', () => setEditOrderPaymentMethodUI('transfer'));
+      document.getElementById('btn-edit-toggle-debt').addEventListener('click', () => {
+        document.getElementById('edit-debt-sub-options').classList.toggle('hidden');
+      });
+      document.getElementById('edit-pay-debt-cash-btn').addEventListener('click', () => setEditOrderPaymentMethodUI('debt_cash'));
+      document.getElementById('edit-pay-debt-transfer-btn').addEventListener('click', () => setEditOrderPaymentMethodUI('debt_transfer'));
+
       document.getElementById('btn-edit-order-add-drink').addEventListener('click', () => {
         const drinkId = document.getElementById('edit-order-add-drink-select').value;
         const drink = menuItems.find(m => m.id === drinkId);
@@ -2461,19 +2663,32 @@
         const target = orders.find(o => o.id === orderId);
         if (!target) return;
 
-        const newCustomer = document.getElementById('edit-order-customer').value.trim() || 'Khách tại quán';
+        const customerRaw = document.getElementById('edit-order-customer').value.trim();
+        if ((editingOrderPaymentMethod === 'debt_cash' || editingOrderPaymentMethod === 'debt_transfer') && (!customerRaw || customerRaw === 'Khách tại quán')) {
+          showToast('Đơn ghi nợ cần ghi rõ tên người nợ!');
+          document.getElementById('edit-order-customer').focus();
+          return;
+        }
+
+        const newCustomer = customerRaw || 'Khách tại quán';
         const newDiscount = Number(document.getElementById('edit-order-discount').value || 0);
         const newNote = document.getElementById('edit-order-note').value.trim();
         const newSubtotal = editingOrderItems.reduce((s, i) => s + Number(i.price) * Number(i.qty), 0);
         const newTotal = Math.max(0, newSubtotal - newDiscount);
 
+        let payText = 'Tiền mặt';
+        if (editingOrderPaymentMethod === 'transfer') payText = 'Chuyển khoản';
+        if (editingOrderPaymentMethod === 'debt_cash') payText = 'Nợ Tiền Mặt';
+        if (editingOrderPaymentMethod === 'debt_transfer') payText = 'Nợ Chuyển Khoản';
+
         openConfirmModal(
           'Bạn đã chắc chắn muốn lưu thay đổi chưa?',
-          `Cập nhật đơn ${target.orderCode || ''} của "${newCustomer}" thành ${formatVND(newTotal)}?`,
+          `Cập nhật đơn ${target.orderCode || ''} của "${newCustomer}" (${formatVND(newTotal)} • ${payText})?`,
           async () => {
             target.customer = newCustomer;
             target.discount = newDiscount;
             target.note = newNote;
+            target.paymentMethod = editingOrderPaymentMethod;
             target.subtotal = newSubtotal;
             target.totalAmount = newTotal;
             target.items = editingOrderItems.map(i => ({ ...i }));
@@ -2481,7 +2696,7 @@
             if (db) {
               try { await setDoc(doc(db, 'mimi_orders', target.id), target); } catch (err) {}
             }
-            await logActivity('edit', `Đã chỉnh sửa đơn ${target.orderCode || ''} (${target.customer} • Thực thu mới: ${formatVND(target.totalAmount)})`);
+            await logActivity('edit', `Đã chỉnh sửa đơn ${target.orderCode || ''} (${target.customer} • ${formatVND(target.totalAmount)} - ${payText})`);
             saveLocalFallback();
             editOrderModal.classList.add('hidden');
             renderDashboardAndHistory();
@@ -2635,6 +2850,7 @@
 
     window.addEventListener('load', async () => {
       initEvents();
+      updateUpcomingBirthdayUI();
       renderCategories();
       renderMenuGrid();
       renderCart();
